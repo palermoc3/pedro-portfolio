@@ -1,0 +1,59 @@
+<div class="min-h-screen bg-[#0F172A] flex items-center justify-center px-4">
+  <div class="w-full max-w-md bg-[#1E293B] rounded-2xl p-8 shadow-xl">
+
+    <h2 class="text-3xl font-bold text-[#F1F5F9] mb-2" style="font-family: 'Space Grotesk', sans-serif;">
+      Criar conta
+    </h2>
+    <p class="text-[#94A3B8] mb-8 text-sm">Preencha os dados para se cadastrar</p>
+
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="mb-5">
+        <%= f.label :name, "Nome completo", class: "block text-sm text-[#94A3B8] mb-1" %>
+        <%= f.text_field :name, autofocus: true,
+            class: "w-full bg-[#0F172A] text-[#F1F5F9] border border-[#334155] rounded-lg px-4 py-3 focus:outline-none focus:border-[#6366F1] transition" %>
+      </div>
+
+      <div class="mb-5">
+        <%= f.label :email, "E-mail", class: "block text-sm text-[#94A3B8] mb-1" %>
+        <%= f.email_field :email, autocomplete: "email",
+            class: "w-full bg-[#0F172A] text-[#F1F5F9] border border-[#334155] rounded-lg px-4 py-3 focus:outline-none focus:border-[#6366F1] transition" %>
+      </div>
+
+      <div class="mb-5">
+        <%= f.label :age, "Idade", class: "block text-sm text-[#94A3B8] mb-1" %>
+        <%= f.number_field :age, min: 1, max: 120,
+            class: "w-full bg-[#0F172A] text-[#F1F5F9] border border-[#334155] rounded-lg px-4 py-3 focus:outline-none focus:border-[#6366F1] transition" %>
+      </div>
+
+      <div class="mb-5">
+        <%= f.label :club, "Time de futebol", class: "block text-sm text-[#94A3B8] mb-1" %>
+        <%= f.text_field :club,
+            class: "w-full bg-[#0F172A] text-[#F1F5F9] border border-[#334155] rounded-lg px-4 py-3 focus:outline-none focus:border-[#6366F1] transition" %>
+      </div>
+
+      <div class="mb-5">
+        <%= f.label :password, "Senha", class: "block text-sm text-[#94A3B8] mb-1" %>
+        <%= f.password_field :password, autocomplete: "new-password",
+            class: "w-full bg-[#0F172A] text-[#F1F5F9] border border-[#334155] rounded-lg px-4 py-3 focus:outline-none focus:border-[#6366F1] transition" %>
+      </div>
+
+      <div class="mb-6">
+        <%= f.label :password_confirmation, "Confirmar senha", class: "block text-sm text-[#94A3B8] mb-1" %>
+        <%= f.password_field :password_confirmation, autocomplete: "new-password",
+            class: "w-full bg-[#0F172A] text-[#F1F5F9] border border-[#334155] rounded-lg px-4 py-3 focus:outline-none focus:border-[#6366F1] transition" %>
+      </div>
+
+      <%= f.submit "Criar conta", class: "w-full bg-[#6366F1] hover:bg-[#4F46E5] text-white font-semibold py-3 rounded-lg transition cursor-pointer" %>
+
+    <% end %>
+
+    <div class="mt-6 text-center text-sm text-[#94A3B8]">
+      Já tem conta?
+      <%= link_to "Entrar", new_session_path(resource_name), class: "text-[#6366F1] hover:underline" %>
+    </div>
+
+  </div>
+</div>
