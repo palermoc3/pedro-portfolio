@@ -121,15 +121,13 @@ Seções na ordem:
 3. **Projetos** — cards com imagem placeholder, nome, descrição curta, links "GitHub" e "Demo"
    (criar 3 projetos estáticos hardcoded por enquanto)
 4. **Habilidades** — grid de badges: Ruby, Rails, JavaScript, Tailwind, PostgreSQL, Git
-5. **Contato** — formulário com Nome, E-mail, Mensagem
-   (salvar no banco, model `ContactMessage`, sem Action Mailer por ora)
 
 **Passo 8 — Responsividade e micro-interações**
 - Scroll suave (`scroll-behavior: smooth`)
 - Hover nos cards de projeto (leve elevação com `shadow` e `scale`)
 - Transição de 200ms em todos os elementos interativos
 - Testar breakpoints: mobile (375px), tablet (768px), desktop (1280px)
-
+- Auto-dismiss em alertas (Flash/Devise): Timeout via JavaScript para esmaecer (opacity 0.5s) e remover os alertas de sucesso/erro da tela após 2 segundos, evitando bloqueio visual no topo da página.
 ---
 
 ### PARTE 3 — Área autenticada (dashboard)
@@ -331,3 +329,11 @@ Inicie pelo **Passo 1**: crie o projeto Rails com o comando correto.
 Explique cada flag usada.
 Mostre a estrutura de pastas gerada.
 Aguarde minha confirmação antes de continuar para o Passo 2.
+
+Passos	Commit
+1–6	Auth + Layout Base
+7–8	Home Page Pública
+9–13	Dashboard + Gráficos
+14	API Futebol
+15–20	Preparação Produção
+21–24	Deploy
