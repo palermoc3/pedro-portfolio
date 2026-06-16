@@ -2,25 +2,20 @@ class BrasileiraoService
   include HTTParty
 
   BASE_URI = "https://v3.football.api-sports.io"
-  BRASILIO_BASE_URI = "https://brasil.io/api"
+  LEAGUE_ID = 71
+  SEASON = 2026
 
   base_uri BASE_URI
 
-  def initialize(api_key: ENV["API_FOOTBALL_KEY"], brasilio_token: ENV["BRASIL_IO_TOKEN"])
+  def initialize(api_key: ENV["API_FOOTBALL_KEY"])
     @api_key = api_key
-    @brasilio_token = brasilio_token
-    @source = "fallback"
+    @source = "API-Football #{SEASON}"
   end
 
   def standings
-    if @brasilio_token.present?
-      brasilio_standings
-    elsif @api_key.present?
-      apifootball_standings
-    else
-      Rails.logger.info("BrasileiraoService: nenhum token configurado, usando fallback")
-      fallback_data
-    end
+    return fallback_data if @api_key.blank?
+
+    apifootball_standings
   rescue StandardError => e
     Rails.logger.error("BrasileiraoService error: #{e.class.name} #{e.message}")
     fallback_data
@@ -36,8 +31,8 @@ class BrasileiraoService
     response = self.class.get(
       "/standings",
       query: {
-        league: 71,
-        season: 2026
+        league: LEAGUE_ID,
+        season: SEASON
       },
       headers: {
         "x-apisports-key" => @api_key
@@ -46,7 +41,6 @@ class BrasileiraoService
     )
 
     if response.success?
-      @source = "API-Football"
       parse_football(response.parsed_response)
     else
       Rails.logger.warn("BrasileiraoService API-Football failed: #{response.code} #{response.message}")
@@ -54,31 +48,6 @@ class BrasileiraoService
     end
   rescue StandardError => e
     Rails.logger.error("BrasileiraoService API-Football connection error: #{e.class.name} #{e.message}")
-    fallback_data
-  end
-
-  def brasilio_standings
-    response = HTTParty.get(
-      "#{BRASILIO_BASE_URI}/dataset/campeonato-brasileiro/series-historicas/data/",
-      headers: {
-        "Authorization" => "Token #{@brasilio_token}"
-      },
-      query: {
-        format: "json",
-        page_size: 20
-      },
-      timeout: 5
-    )
-
-    if response.success?
-      @source = "Brasil.io"
-      parse_brasilio(response.parsed_response)
-    else
-      Rails.logger.warn("BrasileiraoService Brasil.io failed: #{response.code} #{response.message}")
-      fallback_data
-    end
-  rescue StandardError => e
-    Rails.logger.error("BrasileiraoService Brasil.io connection error: #{e.class.name} #{e.message}")
     fallback_data
   end
 
@@ -107,38 +76,28 @@ class BrasileiraoService
     fallback_data
   end
 
-  def parse_brasilio(data)
-    rows = data["results"]
-    return fallback_data unless rows.is_a?(Array)
-
-    Rails.logger.info("BrasileiraoService: parsing #{rows.length} teams from Brasil.io")
-    rows.map do |row|
-      api_name = row["team"] || row["clube"] || row["team_name"] || "Time desconhecido"
-      {
-        position: row["pos"] || row["position"] || 0,
-        team_name: normalize_team_name(api_name),
-        played: row["games"] || row["played"] || 0,
-        wins: row["wins"] || row["vitoria"] || 0,
-        draws: row["draws"] || row["empates"] || 0,
-        losses: row["losses"] || row["derrotas"] || 0,
-        goals_for: row["goals_scored"] || row["goals_for"] || 0,
-        goals_against: row["goals_conceded"] || row["goals_against"] || 0,
-        goal_diff: row["goal_difference"] || row["goals_diff"] || 0,
-        points: row["points"] || row["pontuacao"] || 0
-      }
-    end
-  rescue StandardError => e
-    Rails.logger.error("BrasileiraoService.parse_brasilio error: #{e.class.name} #{e.message}")
-    fallback_data
-  end
-
   def fallback_data
     [
       { position: 1, team_name: "Palmeiras", played: 10, wins: 7, draws: 2, losses: 1, goals_for: 20, goals_against: 8, goal_diff: 12, points: 23 },
       { position: 2, team_name: "Botafogo", played: 10, wins: 6, draws: 2, losses: 2, goals_for: 18, goals_against: 10, goal_diff: 8, points: 20 },
       { position: 3, team_name: "Flamengo", played: 10, wins: 6, draws: 1, losses: 3, goals_for: 19, goals_against: 12, goal_diff: 7, points: 19 },
       { position: 4, team_name: "São Paulo", played: 10, wins: 5, draws: 2, losses: 3, goals_for: 16, goals_against: 14, goal_diff: 2, points: 17 },
-      { position: 5, team_name: "Fortaleza", played: 10, wins: 5, draws: 1, losses: 4, goals_for: 15, goals_against: 13, goal_diff: 2, points: 16 }
+      { position: 5, team_name: "Fortaleza", played: 10, wins: 5, draws: 1, losses: 4, goals_for: 15, goals_against: 13, goal_diff: 2, points: 16 },
+      { position: 6, team_name: "Bahia", played: 10, wins: 4, draws: 4, losses: 2, goals_for: 14, goals_against: 11, goal_diff: 3, points: 16 },
+      { position: 7, team_name: "Cruzeiro", played: 10, wins: 4, draws: 3, losses: 3, goals_for: 13, goals_against: 10, goal_diff: 3, points: 15 },
+      { position: 8, team_name: "Atlético Mineiro", played: 10, wins: 4, draws: 3, losses: 3, goals_for: 12, goals_against: 11, goal_diff: 1, points: 15 },
+      { position: 9, team_name: "Fluminense", played: 10, wins: 4, draws: 2, losses: 4, goals_for: 12, goals_against: 12, goal_diff: 0, points: 14 },
+      { position: 10, team_name: "Bragantino", played: 10, wins: 3, draws: 4, losses: 3, goals_for: 11, goals_against: 11, goal_diff: 0, points: 13 },
+      { position: 11, team_name: "Corinthians", played: 10, wins: 3, draws: 3, losses: 4, goals_for: 10, goals_against: 12, goal_diff: -2, points: 12 },
+      { position: 12, team_name: "Internacional", played: 10, wins: 3, draws: 3, losses: 4, goals_for: 9, goals_against: 11, goal_diff: -2, points: 12 },
+      { position: 13, team_name: "Grêmio", played: 10, wins: 3, draws: 2, losses: 5, goals_for: 12, goals_against: 15, goal_diff: -3, points: 11 },
+      { position: 14, team_name: "Vasco", played: 10, wins: 3, draws: 2, losses: 5, goals_for: 11, goals_against: 15, goal_diff: -4, points: 11 },
+      { position: 15, team_name: "Santos", played: 10, wins: 2, draws: 4, losses: 4, goals_for: 10, goals_against: 13, goal_diff: -3, points: 10 },
+      { position: 16, team_name: "Ceará", played: 10, wins: 2, draws: 4, losses: 4, goals_for: 9, goals_against: 12, goal_diff: -3, points: 10 },
+      { position: 17, team_name: "Sport", played: 10, wins: 2, draws: 3, losses: 5, goals_for: 8, goals_against: 13, goal_diff: -5, points: 9 },
+      { position: 18, team_name: "Juventude", played: 10, wins: 2, draws: 2, losses: 6, goals_for: 8, goals_against: 15, goal_diff: -7, points: 8 },
+      { position: 19, team_name: "Mirassol", played: 10, wins: 1, draws: 4, losses: 5, goals_for: 7, goals_against: 14, goal_diff: -7, points: 7 },
+      { position: 20, team_name: "Athletico Paranaense", played: 10, wins: 1, draws: 3, losses: 6, goals_for: 7, goals_against: 17, goal_diff: -10, points: 6 }
     ]
   end
 
@@ -153,8 +112,8 @@ class BrasileiraoService
     best_match = canonical_clubs.find do |club|
       normalized_canonical = I18n.transliterate(club).downcase.strip
       # Match exato ou contém um no outro
-      normalized_api == normalized_canonical || 
-        normalized_api.include?(normalized_canonical) || 
+      normalized_api == normalized_canonical ||
+        normalized_api.include?(normalized_canonical) ||
         normalized_canonical.include?(normalized_api)
     end
 

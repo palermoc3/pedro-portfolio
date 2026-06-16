@@ -1,42 +1,41 @@
-<div class="min-h-screen bg-midnight p-6">
-  <div class="max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold text-soft-white font-title mb-2">
-      Dashboard
-    </h1>
-    <p class="text-muted mb-8">
-      Olá, <span class="text-electric font-semibold"><%= current_user.name %></span> — bem-vindo à área restrita.
-    </p>
+<div class="min-h-screen bg-midnight px-4 py-8 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-[96rem]">
+    <div class="mb-10">
+      <h1 class="text-3xl font-bold text-soft-white font-title mb-2">
+        Dashboard
+      </h1>
+      <p class="text-muted">
+        Olá, <span class="text-electric font-semibold"><%= current_user.name %></span> — bem-vindo à área restrita.
+      </p>
+    </div>
 
-    <!-- Grid 2x2: [a1, a2] [b1, b2] -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      
-      <!-- COLUNA ESQUERDA: a1 + b1 (Tabela + Paginação) -->
-      <div class="flex flex-col gap-8">
-        
-        <!-- Quadrante a1: Tabela de usuários cadastrados -->
-        <div class="bg-slate rounded-xl p-6">
-          <h2 class="text-xl font-bold text-soft-white font-title mb-4">
-            Usuários Cadastrados
-          </h2>
-          <p class="text-muted text-sm mb-4">
-            <%= @total_users %> no total
-          </p>
+    <!-- Passo 10: tabela à esquerda, gráficos à direita, Brasileirão embaixo -->
+    <div class="grid grid-cols-1 gap-10 xl:grid-cols-5 xl:items-start">
+      <section class="xl:col-span-3">
+        <div class="bg-slate rounded-xl p-6 lg:p-8">
+          <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <h2 class="text-xl font-bold text-soft-white font-title">
+              Usuários Cadastrados
+            </h2>
+            <p class="text-muted text-sm">
+              <%= @total_users %> no total
+            </p>
+          </div>
 
-          <!-- Tabela responsiva -->
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+          <div class="overflow-x-auto rounded-xl border border-midnight/30">
+            <table class="w-full min-w-[44rem] text-sm">
               <thead>
-                <tr class="border-b border-midnight/30">
-                  <th class="text-left py-3 px-4 text-muted font-semibold">Nome</th>
-                  <th class="text-left py-3 px-4 text-muted font-semibold">Time</th>
-                  <th class="text-left py-3 px-4 text-muted font-semibold">Idade</th>
-                  <th class="text-left py-3 px-4 text-muted font-semibold">Cadastro</th>
+                <tr class="border-b border-[#0F172A] bg-[#1E293B]">
+                  <th class="text-left py-4 px-5 text-muted font-semibold">Nome</th>
+                  <th class="text-left py-4 px-5 text-muted font-semibold">Time</th>
+                  <th class="text-left py-4 px-5 text-muted font-semibold">Idade</th>
+                  <th class="text-left py-4 px-5 text-muted font-semibold">Cadastro</th>
                 </tr>
               </thead>
               <tbody>
                 <% @recent_users.each do |user| %>
                   <tr class="border-b border-midnight/20 hover:bg-midnight/20 transition-colors">
-                    <td class="py-3 px-4 text-soft-white">
+                    <td class="py-4 px-5 text-soft-white">
                       <div class="flex items-center gap-2">
                         <%= user.name %>
                         <% if user == current_user %>
@@ -46,9 +45,9 @@
                         <% end %>
                       </div>
                     </td>
-                    <td class="py-3 px-4 text-soft-white"><%= user.club %></td>
-                    <td class="py-3 px-4 text-soft-white"><%= user.age %> anos</td>
-                    <td class="py-3 px-4 text-muted">
+                    <td class="py-4 px-5 text-soft-white"><%= user.club %></td>
+                    <td class="py-4 px-5 text-soft-white"><%= user.age %> anos</td>
+                    <td class="py-4 px-5 text-muted">
                       <%= user.created_at.strftime("%d/%m/%Y") %>
                     </td>
                   </tr>
@@ -62,80 +61,103 @@
               Nenhum usuário cadastrado ainda.
             </div>
           <% end %>
-        </div>
 
-        <!-- Quadrante b1: Paginação -->
-        <div class="bg-slate rounded-xl p-6">
-          <div class="flex justify-center">
+          <div class="mt-6 flex justify-center border-t border-midnight/30 pt-6">
             <%= paginate @recent_users %>
           </div>
         </div>
+      </section>
 
-      </div>
-
-      <!-- COLUNA DIREITA: a2 + b2 (Gráficos) -->
-      <div class="flex flex-col gap-8">
-        
-        <!-- Quadrante a2: Gráfico Pizza - Distribuição de Times -->
-        <div class="bg-slate rounded-xl p-6">
-          <h2 class="text-xl font-bold text-soft-white font-title mb-4">
+      <section class="flex flex-col gap-10 xl:col-span-2">
+        <div class="bg-slate rounded-xl p-6 lg:p-8">
+          <h2 class="text-xl font-bold text-soft-white font-title mb-6">
             Distribuição de Times
           </h2>
-          <div class="h-80">
-            <%= pie_chart @clubs_chart, 
-                colors: ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#3B82F6", "#EC4899", "#14B8A6", "#F97316", "#8B5CF6", "#06B6D4", "#84CC16", "#EAB308", "#64748B", "#475569", "#6B7280", "#9CA3AF", "#D1D5DB", "#E5E7EB", "#F3F4F6", "#FFFFFF"] %>
+          <div class="h-96">
+            <%= pie_chart @clubs_chart,
+                colors: ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#3B82F6", "#EC4899", "#14B8A6", "#F97316", "#8B5CF6", "#06B6D4", "#84CC16", "#EAB308", "#64748B", "#475569", "#6B7280", "#9CA3AF", "#D1D5DB", "#E5E7EB", "#F3F4F6", "#FFFFFF"],
+                library: {
+                  plugins: {
+                    legend: {
+                      position: "right",
+                      labels: { color: "#F1F5F9" }
+                    }
+                  }
+                } %>
           </div>
         </div>
 
-        <!-- Quadrante b2: Gráfico Barras - Faixa Etária -->
-        <div class="bg-slate rounded-xl p-6">
-          <h2 class="text-xl font-bold text-soft-white font-title mb-4">
+        <div class="bg-slate rounded-xl p-6 lg:p-8">
+          <h2 class="text-xl font-bold text-soft-white font-title mb-6">
             Faixa Etária
           </h2>
-          <div class="h-80">
-            <%= bar_chart @age_chart, 
-                colors: ["#6366F1"] %>
+          <div class="h-96">
+            <%= bar_chart @age_chart,
+                colors: @age_chart_colors,
+                stacked: true,
+                library: {
+                  plugins: {
+                    legend: {
+                      position: "right",
+                      labels: { color: "#F1F5F9" }
+                    }
+                  },
+                  scales: {
+                    x: { stacked: true, ticks: { color: "#94A3B8" }, grid: { color: "rgba(148, 163, 184, 0.12)" } },
+                    y: { stacked: true, ticks: { color: "#94A3B8" }, grid: { color: "rgba(148, 163, 184, 0.12)" } }
+                  }
+                } %>
           </div>
         </div>
-
-      </div>
-
+      </section>
     </div>
 
-    <!-- Quadrante c: Tabela da API - Brasileirão (linha inteira) -->
-    <div class="mt-8 bg-slate rounded-xl p-6">
-      <h2 class="text-xl font-bold text-soft-white font-title mb-4">
-        Brasileirão 2024 — Top 10
-      </h2>
-      <p class="text-muted text-sm mb-4">
-        Classificação: <strong><%= @standings_source == "fallback" ? "Fallback local" : @standings_source %></strong>
-      </p>
-
-      <% if @standings_source == "fallback" %>
-        <div class="mb-4 rounded-2xl border border-red-800 bg-red-950/30 p-4 text-sm text-red-200">
-          API de futebol não configurada ou indisponível. Exibindo dados de fallback.
+    <section class="mt-12 bg-slate rounded-xl p-6 lg:p-8">
+      <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <h2 class="text-xl font-bold text-soft-white font-title">
+            Brasileirão 2026 — Classificação
+          </h2>
         </div>
-      <% end %>
 
-      <!-- Tabela responsiva -->
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-          <thead>
-            <tr class="border-b border-midnight/30">
-              <th class="text-left py-3 px-4 text-muted font-semibold">Pos.</th>
-              <th class="text-left py-3 px-4 text-muted font-semibold">Time</th>
-              <th class="text-center py-3 px-4 text-muted font-semibold">Jogos</th>
-              <th class="text-center py-3 px-4 text-muted font-semibold">Vitórias</th>
-              <th class="text-center py-3 px-4 text-muted font-semibold">Empates</th>
-              <th class="text-center py-3 px-4 text-muted font-semibold">Derrotas</th>
-              <th class="text-center py-3 px-4 text-muted font-semibold">Gols</th>
-              <th class="text-center py-3 px-4 text-muted font-semibold">Pontos</th>
+        <div class="w-full rounded-xl border border-electric/40 bg-midnight/40 px-5 py-4 md:w-auto md:min-w-80">
+          <p class="text-xs font-semibold uppercase tracking-widest text-muted">
+            Time do usuário
+          </p>
+          <% if @current_user_standing.present? %>
+            <p class="mt-1 text-soft-white">
+              <strong><%= @current_user_standing[:team_name] %></strong>
+              <span class="text-muted">está em</span>
+              <span class="font-bold text-electric"><%= @current_user_standing[:position] %>º lugar</span>
+            </p>
+          <% else %>
+            <p class="mt-1 text-soft-white">
+              <strong><%= current_user.club %></strong>
+              <span class="text-muted">ainda não apareceu nesta classificação.</span>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="max-h-[44rem] overflow-auto rounded-xl border border-midnight/30">
+        <table class="w-full min-w-[64rem] text-sm">
+          <thead class="sticky top-0 z-10 bg-[#1E293B]">
+            <tr class="border-b border-[#0F172A] bg-[#1E293B]">
+              <th class="text-left py-4 px-5 text-muted font-semibold">Pos.</th>
+              <th class="text-left py-4 px-5 text-muted font-semibold">Time</th>
+              <th class="text-center py-4 px-5 text-muted font-semibold">Jogos</th>
+              <th class="text-center py-4 px-5 text-muted font-semibold">Vitórias</th>
+              <th class="text-center py-4 px-5 text-muted font-semibold">Empates</th>
+              <th class="text-center py-4 px-5 text-muted font-semibold">Derrotas</th>
+              <th class="text-center py-4 px-5 text-muted font-semibold">Gols</th>
+              <th class="text-center py-4 px-5 text-muted font-semibold">Pontos</th>
             </tr>
           </thead>
           <tbody>
             <% @standings.each do |team| %>
-              <tr class="border-b border-midnight/20 hover:bg-midnight/20 transition-colors">
-                <td class="py-3 px-4 text-soft-white font-semibold">
+              <% user_team = team[:team_name] == current_user.club %>
+              <tr class="border-b border-midnight/20 transition-colors <%= user_team ? 'bg-electric/10 hover:bg-electric/20' : 'hover:bg-midnight/20' %>">
+                <td class="py-4 px-5 text-soft-white font-semibold">
                   <% if team[:position] <= 4 %>
                     <span class="inline-flex items-center rounded-full bg-electric/20 px-2 py-1 text-xs font-medium text-electric">
                       <%= team[:position] %>
@@ -148,12 +170,21 @@
                     <%= team[:position] %>
                   <% end %>
                 </td>
-                <td class="py-3 px-4 text-soft-white"><strong><%= team[:team_name] %></strong></td>
-                <td class="py-3 px-4 text-center text-muted"><%= team[:played] %></td>
-                <td class="py-3 px-4 text-center text-success"><%= team[:wins] %></td>
-                <td class="py-3 px-4 text-center text-muted"><%= team[:draws] %></td>
-                <td class="py-3 px-4 text-center text-red-400"><%= team[:losses] %></td>
-                <td class="py-3 px-4 text-center text-muted">
+                <td class="py-4 px-5 text-soft-white">
+                  <div class="flex items-center gap-2">
+                    <strong><%= team[:team_name] %></strong>
+                    <% if user_team %>
+                      <span class="inline-flex items-center rounded-full bg-success/20 px-2 py-1 text-xs font-medium text-success">
+                        seu time
+                      </span>
+                    <% end %>
+                  </div>
+                </td>
+                <td class="py-4 px-5 text-center text-muted"><%= team[:played] %></td>
+                <td class="py-4 px-5 text-center text-success"><%= team[:wins] %></td>
+                <td class="py-4 px-5 text-center text-muted"><%= team[:draws] %></td>
+                <td class="py-4 px-5 text-center text-red-400"><%= team[:losses] %></td>
+                <td class="py-4 px-5 text-center text-muted">
                   <% if team[:goal_diff] > 0 %>
                     <span class="text-success">+<%= team[:goal_diff] %></span>
                   <% elsif team[:goal_diff] < 0 %>
@@ -162,7 +193,7 @@
                     <span class="text-muted">=<%= team[:goal_diff] %></span>
                   <% end %>
                 </td>
-                <td class="py-3 px-4 text-center">
+                <td class="py-4 px-5 text-center">
                   <span class="inline-flex items-center rounded-full bg-electric/20 px-3 py-1 font-bold text-electric">
                     <%= team[:points] %>
                   </span>
@@ -175,9 +206,9 @@
 
       <% if @standings.empty? %>
         <div class="text-center py-8 text-muted">
-          Erro ao carregar dados da API. Exibindo dados de fallback.
+          Nenhum dado de classificação disponível no momento.
         </div>
       <% end %>
-    </div>
+    </section>
   </div>
 </div>
