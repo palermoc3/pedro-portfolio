@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for pedro-portfolio on 2026-06-16T14:09:01-03:00
+# fly.toml app configuration file generated for pedro-portfolio on 2026-06-16T14:47:40-03:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -6,6 +6,8 @@
 app = 'pedro-portfolio'
 primary_region = 'gru'
 console_command = '/rails/bin/rails console'
+
+[build]
 
 [env]
   PORT = '8080'
