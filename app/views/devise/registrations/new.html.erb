@@ -28,10 +28,12 @@
             class: "w-full bg-[#0F172A] text-[#F1F5F9] border border-[#334155] rounded-lg px-4 py-3 focus:outline-none focus:border-[#6366F1] transition" %>
       </div>
 
-      <div class="mb-5">
-        <%= f.label :club, "Time de futebol", class: "block text-sm text-[#94A3B8] mb-1" %>
-        <%= f.text_field :club,
-            class: "w-full bg-[#0F172A] text-[#F1F5F9] border border-[#334155] rounded-lg px-4 py-3 focus:outline-none focus:border-[#6366F1] transition" %>
+      <div>
+        <%= f.label :club, "Time de futebol", class: "block text-sm text-muted mb-1" %>
+        <%= f.select :club,
+        options_for_select([["Selecione seu time", ""]] + User::SERIE_A_CLUBS.map { |c| [c, c] }),
+        {},
+        class: "w-full bg-midnight border border-slate focus:border-electric text-soft-white rounded-lg px-4 py-3 outline-none transition duration-200" %>
       </div>
 
       <div class="mb-5">
