@@ -16,5 +16,9 @@ class DashboardController < ApplicationController
       "31–40" => User.where(age: 31..40).count,
       "41+"   => User.where("age > 40").count
     }
+    
+    # Quadrante c: Tabela API - Brasileirão
+    brasileirao = BrasileiraoService.new
+    @standings = brasileirao.standings.first(10) # Top 10 times
   end
 end

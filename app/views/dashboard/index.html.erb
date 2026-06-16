@@ -101,5 +101,77 @@
       </div>
 
     </div>
+
+    <!-- Quadrante c: Tabela da API - Brasileirão (linha inteira) -->
+    <div class="mt-8 bg-slate rounded-xl p-6">
+      <h2 class="text-xl font-bold text-soft-white font-title mb-4">
+        Brasileirão 2024 — Top 10
+      </h2>
+      <p class="text-muted text-sm mb-4">
+        Classificação ao vivo via API-Football
+      </p>
+
+      <!-- Tabela responsiva -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-midnight/30">
+              <th class="text-left py-3 px-4 text-muted font-semibold">Pos.</th>
+              <th class="text-left py-3 px-4 text-muted font-semibold">Time</th>
+              <th class="text-center py-3 px-4 text-muted font-semibold">Jogos</th>
+              <th class="text-center py-3 px-4 text-muted font-semibold">Vitórias</th>
+              <th class="text-center py-3 px-4 text-muted font-semibold">Empates</th>
+              <th class="text-center py-3 px-4 text-muted font-semibold">Derrotas</th>
+              <th class="text-center py-3 px-4 text-muted font-semibold">Gols</th>
+              <th class="text-center py-3 px-4 text-muted font-semibold">Pontos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @standings.each do |team| %>
+              <tr class="border-b border-midnight/20 hover:bg-midnight/20 transition-colors">
+                <td class="py-3 px-4 text-soft-white font-semibold">
+                  <% if team[:position] <= 4 %>
+                    <span class="inline-flex items-center rounded-full bg-electric/20 px-2 py-1 text-xs font-medium text-electric">
+                      <%= team[:position] %>
+                    </span>
+                  <% elsif team[:position] <= 6 %>
+                    <span class="inline-flex items-center rounded-full bg-soft-white/10 px-2 py-1 text-xs font-medium text-soft-white">
+                      <%= team[:position] %>
+                    </span>
+                  <% else %>
+                    <%= team[:position] %>
+                  <% end %>
+                </td>
+                <td class="py-3 px-4 text-soft-white"><strong><%= team[:team_name] %></strong></td>
+                <td class="py-3 px-4 text-center text-muted"><%= team[:played] %></td>
+                <td class="py-3 px-4 text-center text-success"><%= team[:wins] %></td>
+                <td class="py-3 px-4 text-center text-muted"><%= team[:draws] %></td>
+                <td class="py-3 px-4 text-center text-red-400"><%= team[:losses] %></td>
+                <td class="py-3 px-4 text-center text-muted">
+                  <% if team[:goal_diff] > 0 %>
+                    <span class="text-success">+<%= team[:goal_diff] %></span>
+                  <% elsif team[:goal_diff] < 0 %>
+                    <span class="text-red-400"><%= team[:goal_diff] %></span>
+                  <% else %>
+                    <span class="text-muted">=<%= team[:goal_diff] %></span>
+                  <% end %>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <span class="inline-flex items-center rounded-full bg-electric/20 px-3 py-1 font-bold text-electric">
+                    <%= team[:points] %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if @standings.empty? %>
+        <div class="text-center py-8 text-muted">
+          Erro ao carregar dados da API. Exibindo dados de fallback.
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
