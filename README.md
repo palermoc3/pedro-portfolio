@@ -1,24 +1,58 @@
-# README
+# Pedro Portfolio — README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+**Resumo**
+- **Descrição:** Portfólio Rails com autenticação (Devise), dashboard com 4 quadrantes (tabela de usuários, pizza de times, barras de faixa etária, tabela do Brasileirão) e integração opcional com APIs de futebol.
+- **Status:** Implementado localmente. Passos 9–14 e 15–16 concluídos; preparo para deploy (Render) configurado.
 
-Things you may want to cover:
+**O que foi feito**
+- **Auth + Layout:** Implementado com `Devise`, views customizadas e layout Tailwind (paleta `midnight`, `slate`, `electric`, `soft-white`, `muted`, `success`).
+- **Dashboard:** `DashboardController#index` com proteção `before_action :authenticate_user!` e grid 2x2 responsivo.
+- **Tabela de usuários:** Paginação com `kaminari` (10 por página), destaque do usuário logado.
+- **Gráficos:** `chartkick` + `chart.js` (CDN) — pizza (`@clubs_chart`) e barras (`@age_chart`).
+- **API Brasileirão:** `app/services/brasileirao_service.rb` implementado com fallback; suporta `API-Football` e `Brasil.io` via `API_FOOTBALL_KEY` ou `BRASIL_IO_TOKEN`.
+- **Produção / Deploy:** `config/database.yml` atualizado para `postgresql` em produção; `config/environments/production.rb` ajustado; `render.yaml` e `.env.example` adicionados.
 
-* Ruby version
+**Como rodar localmente**
+- Instale dependências e prepare o banco:
 
-* System dependencies
+```
+bundle install
+bin/rails db:create db:migrate db:seed
+```
 
-* Configuration
+- Iniciar servidor:
 
-* Database creation
+```
+bin/rails server
+```
 
-* Database initialization
+- URLs úteis:
+- **Dashboard:** `http://localhost:3000/dashboard` (requer login)
 
-* How to run the test suite
+**Variáveis de ambiente**
+- **Obrigatórias (produção):** `RAILS_MASTER_KEY`, `DATABASE_URL`
+- **Recomendadas (opcionais):** `API_FOOTBALL_KEY` — chave da API-Football; `BRASIL_IO_TOKEN` — token Brasil.io
+- **Outras:** `RAILS_SERVE_STATIC_FILES=true`, `RAILS_LOG_TO_STDOUT=true`
 
-* Services (job queues, cache servers, search engines, etc.)
+**Deploy no Render (rápido)**
+- Render detecta `render.yaml`. Configure no painel:
+	- Adicione `RAILS_MASTER_KEY` (valor de `config/master.key` local) como secret.
+	- Vincule o database criado pelo `render.yaml`.
+	- BuildCommand e StartCommand já configurados no `render.yaml`.
 
-* Deployment instructions
+**Notas sobre a API do Brasileirão**
+- O endpoint público do `brasil.io` exige token (autenticação). Se não houver token configurado o service usa dados de fallback.
+- Para usar `API-Football` defina `API_FOOTBALL_KEY`; para `Brasil.io` defina `BRASIL_IO_TOKEN`.
 
-* ...
+**Arquivos importantes**
+- `app/services/brasileirao_service.rb` — lógica de integração com fallback
+- `app/controllers/dashboard_controller.rb` — agrega dados para a view
+- `app/views/dashboard/index.html.erb` — UI do dashboard
+- `config/database.yml`, `config/environments/production.rb`, `render.yaml`, `.env.example`
+
+**Próximos passos sugeridos**
+- Executar validação final local (`rails server`) e testar fluxo completo (cadastro → login → dashboard).
+- Criar repositório remoto e push, vincular ao Render e ajustar variáveis de ambiente.
+- Opcional: configurar CI (GitHub Actions) para testes e deploy automático.
+
+Se quiser, eu: 1) executo a validação local agora; 2) crio o `README` também no formato curto para o perfil público; 3) faço o push das mudanças para um repositório remoto — qual prefere que eu faça agora?
