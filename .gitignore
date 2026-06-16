@@ -9,6 +9,10 @@
 
 # Ignore all environment files.
 /.env*
+!.env.example
+/config/master.key
+
+db/*.sqlite3
 
 # Ignore all logfiles and tempfiles.
 /log/*
