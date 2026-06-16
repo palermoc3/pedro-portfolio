@@ -199,7 +199,7 @@ GET https://brasil.io/api/dataset/campeonato-brasileiro/series-historicas/data/
 ```
 Ou alternativamente a **API-Football** (plano grátis, 100 req/dia):
 ```
-GET https://v3.football.api-sports.io/standings?league=71&season=2024
+GET https://v3.football.api-sports.io/standings?league=71&season=2026
 ```
 
 - Criar um service object: `app/services/brasileirao_service.rb`

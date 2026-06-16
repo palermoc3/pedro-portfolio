@@ -108,8 +108,14 @@
         Brasileirão 2024 — Top 10
       </h2>
       <p class="text-muted text-sm mb-4">
-        Classificação ao vivo via API-Football
+        Classificação: <strong><%= @standings_source == "fallback" ? "Fallback local" : @standings_source %></strong>
       </p>
+
+      <% if @standings_source == "fallback" %>
+        <div class="mb-4 rounded-2xl border border-red-800 bg-red-950/30 p-4 text-sm text-red-200">
+          API de futebol não configurada ou indisponível. Exibindo dados de fallback.
+        </div>
+      <% end %>
 
       <!-- Tabela responsiva -->
       <div class="overflow-x-auto">

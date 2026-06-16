@@ -19,6 +19,7 @@ class DashboardController < ApplicationController
     
     # Quadrante c: Tabela API - Brasileirão
     brasileirao = BrasileiraoService.new
-    @standings = brasileirao.standings.first(10) # Top 10 times
+    @standings = brasileirao.standings.first(10)
+    @standings_source = brasileirao.source
   end
 end
