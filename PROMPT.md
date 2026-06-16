@@ -193,17 +193,14 @@ Mostrar o SQL equivalente e explicar o uso de `where` com ranges.
 
 **Passo 14 — Gráfico 3: API externa — Brasileirão**
 
-Usar a API pública **brasil.io** (gratuita, sem autenticação para dados históricos):
-```
-GET https://brasil.io/api/dataset/campeonato-brasileiro/series-historicas/data/
-```
-Ou alternativamente a **API-Football** (plano grátis, 100 req/dia):
+Usar a **API-Football** como API escolhida para a classificação do Brasileirão 2026:
 ```
 GET https://v3.football.api-sports.io/standings?league=71&season=2026
 ```
 
 - Criar um service object: `app/services/brasileirao_service.rb`
 - Usar HTTParty para fazer a requisição
+- Configurar a chave em `API_FOOTBALL_KEY` no ambiente local e no Render
 - Tratar erros (timeout, API fora do ar) com rescue e fallback elegante
 - Mostrar tabela de classificação: posição, time, pontos, jogos, vitórias
 
@@ -273,7 +270,7 @@ RAILS_ENV=production
 RAILS_SERVE_STATIC_FILES=true
 RAILS_LOG_TO_STDOUT=true
 
-# Se usar API-Football (opcional)
+# API-Football 2026: necessária para dados reais no dashboard
 API_FOOTBALL_KEY=
 ```
 

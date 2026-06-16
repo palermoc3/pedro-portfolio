@@ -30,7 +30,7 @@ class User < ApplicationRecord
 
   validates :name, :age, :club, presence: true
   validates :club, inclusion: { in: SERIE_A_CLUBS, message: "deve ser um time da Série A" }
-  
+
   before_validation :normalize_club
 
   private
