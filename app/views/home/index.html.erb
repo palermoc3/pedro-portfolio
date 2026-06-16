@@ -60,19 +60,16 @@
         {
           name: "Portfólio com Dashboard",
           desc: "Portfólio pessoal com autenticação, dashboard de infográficos e integração com API do Brasileirão.",
-          github: "#",
-          demo: "#"
+          demo: "/dashboard"
         },
         {
-          name: "App de Gestão de Tarefas",
-          desc: "CRUD completo com Rails, drag-and-drop entre colunas e autenticação por usuário.",
-          github: "#",
-          demo: "#"
+          name: "Sistema de Navegação para Robô Autônomo",
+          desc: "Desenvolvimento de lógica de controle baseada em sensores para seguimento de linha e evasão de obstáculos em ambiente simulado. Aplicação de algoritmos, tomada de decisão e pensamento computacional.",
+          demo: "https://www.youtube.com/watch?v=_gg8VvAYraU"
         },
         {
           name: "API REST de Produtos",
           desc: "API JSON com Rails, autenticação via token, paginação e documentação Swagger.",
-          github: "#",
           demo: "#"
         }
       ].each do |project| %>
@@ -84,8 +81,11 @@
             <h3 class="text-[#F1F5F9] font-bold text-lg mb-2 font-['Space_Grotesk']"><%= project[:name] %></h3>
             <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed"><%= project[:desc] %></p>
             <div class="flex gap-3">
-              <a href="<%= project[:github] %>" class="text-xs text-[#6366F1] border border-[#6366F1] px-3 py-1 rounded hover:bg-[#6366F1] hover:text-white transition duration-200">GitHub</a>
-              <a href="<%= project[:demo] %>" class="text-xs text-[#10B981] border border-[#10B981] px-3 py-1 rounded hover:bg-[#10B981] hover:text-white transition duration-200">Demo</a>
+              <% if project[:demo].start_with?("http") %>
+                <%= link_to "Demo", project[:demo], target: "_blank", rel: "noopener", class: "text-xs text-[#10B981] border border-[#10B981] px-3 py-1 rounded hover:bg-[#10B981] hover:text-white transition duration-200" %>
+              <% else %>
+                <%= link_to "Demo", project[:demo], class: "text-xs text-[#10B981] border border-[#10B981] px-3 py-1 rounded hover:bg-[#10B981] hover:text-white transition duration-200" %>
+              <% end %>
             </div>
           </div>
         </div>

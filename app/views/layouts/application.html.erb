@@ -52,6 +52,11 @@
 <%= link_to "Contato", root_path(anchor: "contato"),
     class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
     
+<% if user_signed_in? %>
+  <%= link_to "Dashboard", dashboard_path,
+      class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
+<% end %>
+
       <% if user_signed_in? %>
         <%= button_to "Sair",
             destroy_user_session_path,
