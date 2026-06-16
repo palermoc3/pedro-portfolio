@@ -62,11 +62,16 @@ FROM base
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
-USER 1000:1000
+
+# ADICIONADO: Cria o diretório /data na raiz e dá permissão total para o usuário rails
+RUN mkdir -p /data && chown -R rails:rails /data
 
 # Copy built artifacts: gems, application
 COPY --chown=rails:rails --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --chown=rails:rails --from=build /rails /rails
+
+# MUDANÇA APENAS DE POSIÇÃO: O switch de usuário fica logo antes de rodar o app
+USER 1000:1000
 
 # Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
