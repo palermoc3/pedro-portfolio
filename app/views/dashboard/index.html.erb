@@ -7,8 +7,99 @@
       Olá, <span class="text-electric font-semibold"><%= current_user.name %></span> — bem-vindo à área restrita.
     </p>
 
-    <div class="bg-slate rounded-xl p-8 text-center text-muted">
-      Em construção — dados chegam nos próximos passos.
+    <!-- Grid 2x2: [a1, a2] [b1, b2] -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- COLUNA ESQUERDA: a1 + b1 (Tabela + Paginação) -->
+      <div class="flex flex-col gap-8">
+        
+        <!-- Quadrante a1: Tabela de usuários cadastrados -->
+        <div class="bg-slate rounded-xl p-6">
+          <h2 class="text-xl font-bold text-soft-white font-title mb-4">
+            Usuários Cadastrados
+          </h2>
+          <p class="text-muted text-sm mb-4">
+            <%= @total_users %> no total
+          </p>
+
+          <!-- Tabela responsiva -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-midnight/30">
+                  <th class="text-left py-3 px-4 text-muted font-semibold">Nome</th>
+                  <th class="text-left py-3 px-4 text-muted font-semibold">Time</th>
+                  <th class="text-left py-3 px-4 text-muted font-semibold">Idade</th>
+                  <th class="text-left py-3 px-4 text-muted font-semibold">Cadastro</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @recent_users.each do |user| %>
+                  <tr class="border-b border-midnight/20 hover:bg-midnight/20 transition-colors">
+                    <td class="py-3 px-4 text-soft-white">
+                      <div class="flex items-center gap-2">
+                        <%= user.name %>
+                        <% if user == current_user %>
+                          <span class="inline-flex items-center rounded-full bg-success/20 px-2 py-1 text-xs font-medium text-success">
+                            você
+                          </span>
+                        <% end %>
+                      </div>
+                    </td>
+                    <td class="py-3 px-4 text-soft-white"><%= user.club %></td>
+                    <td class="py-3 px-4 text-soft-white"><%= user.age %> anos</td>
+                    <td class="py-3 px-4 text-muted">
+                      <%= user.created_at.strftime("%d/%m/%Y") %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <% if @recent_users.empty? %>
+            <div class="text-center py-8 text-muted">
+              Nenhum usuário cadastrado ainda.
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Quadrante b1: Paginação -->
+        <div class="bg-slate rounded-xl p-6">
+          <div class="flex justify-center">
+            <%= paginate @recent_users %>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUNA DIREITA: a2 + b2 (Gráficos) -->
+      <div class="flex flex-col gap-8">
+        
+        <!-- Quadrante a2: Gráfico Pizza - Distribuição de Times -->
+        <div class="bg-slate rounded-xl p-6">
+          <h2 class="text-xl font-bold text-soft-white font-title mb-4">
+            Distribuição de Times
+          </h2>
+          <div class="h-80">
+            <%= pie_chart @clubs_chart, 
+                colors: ["#6366F1", "#10B981", "#F59E0B", "#EF4444", "#3B82F6", "#EC4899", "#14B8A6", "#F97316", "#8B5CF6", "#06B6D4", "#84CC16", "#EAB308", "#64748B", "#475569", "#6B7280", "#9CA3AF", "#D1D5DB", "#E5E7EB", "#F3F4F6", "#FFFFFF"] %>
+          </div>
+        </div>
+
+        <!-- Quadrante b2: Gráfico Barras - Faixa Etária -->
+        <div class="bg-slate rounded-xl p-6">
+          <h2 class="text-xl font-bold text-soft-white font-title mb-4">
+            Faixa Etária
+          </h2>
+          <div class="h-80">
+            <%= bar_chart @age_chart, 
+                colors: ["#6366F1"] %>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   </div>
 </div>

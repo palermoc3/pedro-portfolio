@@ -1,0 +1,3 @@
+<li>
+  <%= link_to_unless current_page.last?, raw(t 'views.pagination.next'), url, rel: 'next', remote: remote, class: 'px-3 py-2 bg-slate text-soft-white rounded hover:bg-electric transition-colors text-sm' %>
+</li>
