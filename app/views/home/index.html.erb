@@ -15,35 +15,39 @@
   <div class="text-center max-w-3xl">
     <p class="text-[#6366F1] font-semibold tracking-widest uppercase text-sm mb-3 font-['Space_Grotesk']">Olá, eu sou</p>
     <h1 class="text-5xl md:text-7xl font-bold text-[#F1F5F9] mb-4 font-['Space_Grotesk']">Pedro Palermo</h1>
-    <h2 class="text-2xl md:text-3xl text-[#94A3B8] mb-6 font-['Space_Grotesk']">Desenvolvedor Ruby on Rails</h2>
-    <p class="text-[#94A3B8] text-lg mb-10 leading-relaxed">
-      Construo aplicações web robustas e elegantes. Apaixonado por código limpo, boas práticas e aprendizado contínuo.
-    </p>
+<p class="text-[#94A3B8] text-lg mb-10 leading-relaxed">
+  Conectando Engenharia de Software, Ciência de Dados e Inteligência Artificial. Desenvolvo aplicações web escaláveis de ponta a ponta, com foco em arquiteturas sólidas, automação de rotinas e soluções orientadas a dados.
+</p>
   </div>
 </section>
 
 <%# ───────────── 2. SOBRE MIM ───────────── %>
-<section id="sobre" class="py-24 bg-[#0F172A] px-6">
+<section id="sobre" class="py-24 bg-[#0F172A] px-6 mb-3">
   <div class="max-w-4xl mx-auto">
     <h2 class="text-3xl font-bold text-[#F1F5F9] mb-4 font-['Space_Grotesk']">Sobre mim</h2>
     <div class="w-12 h-1 bg-[#6366F1] mb-8 rounded"></div>
-    <p class="text-[#94A3B8] text-lg leading-relaxed mb-10">
-      Desenvolvedor Rails com 1 ano de experiência, focado em construir produtos que realmente funcionam.
-      Gosto de entender o negócio por trás do código e de deixar cada detalhe bem feito —
-      desde o banco de dados até a experiência do usuário.
-    </p>
+    
+    <div class="text-[#94A3B8] text-base md:text-lg leading-relaxed mb-10 space-y-4">
+      <p>
+        Sou um profissional de tecnologia focado em <strong>Engenharia de Software Full Stack</strong> com uma forte inclinação e especialização para a área de <strong>Ciência de Dados e IA aplicada</strong>. Minha trajetória combina o desenvolvimento de aplicações completas e robustas à capacidade de analisar dados complexos para gerar automações inteligentes e otimizar rotinas operacionais.
+      </p>
+      <p>
+        Tenho experiência prática no ciclo completo de desenvolvimento de software de ponta a ponta, atuando desde a modelagem de bancos de dados relacionais até a refatoração de sistemas críticos de alta complexidade, como motores de precificação dinâmica e análise de performance. Busco sempre construir soluções limpas, escaláveis e fortemente alinhadas às necessidades reais de negócio e impacto industrial.
+      </p>
+    </div>
+
     <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <% [
-        ["🧠", "Aprendizado rápido"],
-        ["🤝", "Trabalho em equipe"],
-        ["🔍", "Atenção aos detalhes"],
-        ["📦", "Organização e foco"],
-        ["💬", "Comunicação clara"],
-        ["🚀", "Mentalidade de entrega"]
+        ["🧠", "Arquitetura & Clean Code"],
+        ["📊", "Modelagem & Análise de Dados"],
+        ["🤖", "Integração de Modelos de IA (LLMs)"],
+        ["⚙️", "Automação de Pipelines & Rotinas"],
+        ["🤝", "Mentoria Técnica & Resolução de Problemas"],
+        ["🚀", "Foco em Entrega & Impacto de Negócio"]
       ].each do |icon, skill| %>
-        <li class="flex items-center gap-3 text-[#F1F5F9] bg-[#1E293B] px-4 py-3 rounded-lg">
+        <li class="flex items-center gap-3 text-[#F1F5F9] bg-[#1E293B] px-4 py-3 rounded-lg border border-[#1E293B] hover:border-[#6366F1]/50 transition duration-200">
           <span class="text-xl"><%= icon %></span>
-          <span><%= skill %></span>
+          <span class="font-medium text-sm md:text-base"><%= skill %></span>
         </li>
       <% end %>
     </ul>
@@ -60,51 +64,112 @@
         {
           name: "Portfólio com Dashboard",
           desc: "Portfólio pessoal com autenticação, dashboard de infográficos e integração com API do Brasileirão.",
+          tags: ["Ruby on Rails", "PostgreSQL", "APIs"],
           demo: "/dashboard"
         },
         {
           name: "Sistema de Navegação para Robô Autônomo",
-          desc: "Desenvolvimento de lógica de controle baseada em sensores para seguimento de linha e evasão de obstáculos em ambiente simulado. Aplicação de algoritmos, tomada de decisão e pensamento computacional.",
+          desc: "Desenvolvimento de lógica de controle baseada em sensores para seguimento de linha e evasão de obstáculos em ambiente simulado.",
+          tags: ["Python", "Algoritmos", "Simulação"],
           demo: "https://www.youtube.com/watch?v=_gg8VvAYraU"
         },
         {
-          name: "API REST de Produtos",
-          desc: "API JSON com Rails, autenticação via token, paginação e documentação Swagger.",
-          demo: "#"
+          name: "Ecommerce Portfólio",
+          desc: "Exibição de loja virtual modular contendo fluxos completos de autenticação robusta, integração de gateways de pagamentos e upload de mídias.",
+          tags: ["Ruby on Rails", "JavaScript", "Vue.js"],
+          demo: "https://www.youtube.com/watch?v=LSvSzZZag3Y"
         }
       ].each do |project| %>
-        <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-[#1E293B] hover:border-[#6366F1] hover:shadow-lg hover:shadow-indigo-900/30 hover:scale-[1.02] transition duration-200">
-          <div class="h-40 bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex items-center justify-center">
-            <span class="text-4xl">🛠️</span>
+        
+        <% card_options = { class: "block bg-[#0F172A] rounded-xl overflow-hidden border border-[#1E293B] hover:border-[#6366F1] hover:shadow-lg hover:shadow-indigo-900/30 hover:scale-[1.02] transition duration-200 group" } %>
+        <% card_options.merge!(target: "_blank", rel: "noopener") if project[:demo].start_with?("http") %>
+
+        <%= link_to project[:demo], card_options do %>
+          <div class="h-40 bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex items-center justify-center relative overflow-hidden">
+            <span class="text-4xl group-hover:scale-110 transition duration-200">🛠️</span>
+            <div class="absolute bottom-3 right-3 text-xs text-[#10B981] opacity-0 group-hover:opacity-100 transition duration-200 flex items-center gap-1">
+              Acessar ↗
+            </div>
           </div>
-          <div class="p-5">
-            <h3 class="text-[#F1F5F9] font-bold text-lg mb-2 font-['Space_Grotesk']"><%= project[:name] %></h3>
-            <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed"><%= project[:desc] %></p>
-            <div class="flex gap-3">
-              <% if project[:demo].start_with?("http") %>
-                <%= link_to "Demo", project[:demo], target: "_blank", rel: "noopener", class: "text-xs text-[#10B981] border border-[#10B981] px-3 py-1 rounded hover:bg-[#10B981] hover:text-white transition duration-200" %>
-              <% else %>
-                <%= link_to "Demo", project[:demo], class: "text-xs text-[#10B981] border border-[#10B981] px-3 py-1 rounded hover:bg-[#10B981] hover:text-white transition duration-200" %>
+          <div class="p-5 flex flex-col justify-between h-64">
+            <div>
+              <h3 class="text-[#F1F5F9] font-bold text-lg mb-2 font-['Space_Grotesk'] group-hover:text-[#6366F1] transition duration-200 truncate" title="<%= project[:name] %>">
+                <%= project[:name] %>
+              </h3>
+              <%# mb-5 dá o respiro necessário antes das tags %>
+              <p class="text-[#94A3B8] text-sm mb-5 leading-relaxed line-clamp-3"><%= project[:desc] %></p>
+            </div>
+            
+            <div class="flex flex-wrap gap-1.5 max-h-16 overflow-hidden relative" title="Habilidades técnicas utilizadas">
+              <% project[:tags].each do |tag| %>
+ <span class="bg-[#0F172A] text-[#F1F5F9] border border-[#6366F1]/40 px-3 p-1.5 m-1.5 rounded-full text-sm hover:border-[#6366F1] hover:text-[#6366F1] transition duration-200 max-w-[180px] truncate block" >
+               <%= tag %>
+                </span>
               <% end %>
             </div>
           </div>
-        </div>
+        <% end %>
+              
       <% end %>
     </div>
   </div>
 </section>
-
 <%# ───────────── 4. HABILIDADES ───────────── %>
 <section id="habilidades" class="py-24 bg-[#0F172A] px-6">
-  <div class="max-w-4xl mx-auto">
-    <h2 class="text-3xl font-bold text-[#F1F5F9] mb-4 font-['Space_Grotesk']">Habilidades</h2>
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-[#F1F5F9] mb-4 font-['Space_Grotesk']">
+      Habilidades
+    </h2>
     <div class="w-12 h-1 bg-[#6366F1] mb-10 rounded"></div>
-    <div class="flex flex-wrap gap-3">
-      <% ["Ruby", "Ruby on Rails", "JavaScript", "Tailwind CSS", "PostgreSQL", "SQLite", "Git", "GitHub", "HTML5", "REST APIs"].each do |skill| %>
-        <span class="bg-[#1E293B] text-[#F1F5F9] border border-[#6366F1]/40 px-4 py-2 rounded-full text-sm font-medium hover:border-[#6366F1] hover:text-[#6366F1] transition duration-200">
-          <%= skill %>
-        </span>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+      <%# Centralizando o Nome e os Formatos/Categorias no mesmo objeto mapeado por um Array %>
+      <% all_skills = [
+        { name: "Ruby", formats: ["Backend"] },
+        { name: "Ruby on Rails", formats: ["Backend"] },
+        { name: "Python", formats: ["Backend", "Dados & IA"] },
+        { name: "REST APIs", formats: ["Backend"] },
+        { name: "SQL", formats: ["Backend", "Infraestrutura"] },
+        { name: "JavaScript", formats: ["Frontend"] },
+        { name: "Vue.js", formats: ["Frontend"] },
+        { name: "HTML5", formats: ["Frontend"] },
+        { name: "CSS3", formats: ["Frontend"] },
+        { name: "Tailwind CSS", formats: ["Frontend"] },
+        { name: "Pandas", formats: ["Dados & IA"] },
+        { name: "NumPy", formats: ["Dados & IA"] },
+        { name: "Power BI", formats: ["Dados & IA"] },
+        { name: "LLMs", formats: ["Dados & IA"] },
+        { name: "Prompt Engineering", formats: ["Dados & IA"] },
+        { name: "PostgreSQL", formats: ["Infraestrutura"] },
+        { name: "Git", formats: ["Infraestrutura"] },
+        { name: "GitHub", formats: ["Infraestrutura"] },
+        { name: "Docker", formats: ["Infraestrutura"] },
+        { name: "AWS", formats: ["Infraestrutura"] },
+        { name: "Linux", formats: ["Infraestrutura"] }
+      ] %>
+
+      <%# Agrupamos as habilidades dinamicamente de acordo com os formatos passados nos arrays %>
+      <% categories = ["Backend", "Frontend", "Dados & IA", "Infraestrutura"] %>
+
+      <% categories.each do |category| %>
+        <div class="mb-2">
+          <h3 class="text-[#F1F5F9] font-semibold text-lg mb-4 font-['Space_Grotesk']">
+            <%= category %>
+          </h3>
+
+          <div class="flex flex-wrap gap-2">
+            <%# Filtra o array único procurando quais habilidades pertencem à categoria atual %>
+            <% all_skills.select { |s| s[:formats].include?(category) }.each do |skill| %>
+              <%# max-w limita o tamanho do badge, truncate coloca os '...' e title mostra o nome completo ao passar o mouse %>
+              <span class="bg-[#0F172A] text-[#F1F5F9] border border-[#6366F1]/40 px-3 py-1.5 rounded-full text-sm hover:border-[#6366F1] hover:text-[#6366F1] transition duration-200 max-w-[180px] truncate block" title="<%= skill[:name] %>">
+                <%= skill[:name] %>
+              </span>
+            <% end %>
+          </div>
+        </div>
       <% end %>
+
     </div>
   </div>
 </section>
