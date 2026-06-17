@@ -36,8 +36,19 @@ class DashboardController < ApplicationController
     @recent_users = User.order(created_at: :desc).page(params[:page]).per(14)
     @total_users = User.count
 
-    # Quadrante a2: Gráfico Pizza - Distribuição de times
-    @clubs_chart = User.group(:club).count
+# Quadrante a2: Gráfico Pizza - Distribuição de times
+dados_originais = User.group(:club).count
+
+# Ordena do maior para o menor e pega os 10 primeiros
+top_10 = dados_originais.sort_by { |_key, value| -value }.first(10).to_h
+
+# Calcula a soma de todo o restante que ficou de fora
+total_outros = dados_originais.values.sum - top_10.values.sum
+
+# Se houver itens fora do top 10, adiciona a categoria "Outros"
+top_10["Outros"] = total_outros if total_outros > 0
+
+@clubs_chart = top_10
 
     # Quadrante b2: Gráfico Barras - Faixa etária por time
     @age_chart = age_chart_by_club

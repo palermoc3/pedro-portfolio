@@ -1,59 +1,80 @@
-# Pedro Portfolio — README
+📖 Sobre o projeto
 
-**Resumo**
-- **Descrição:** Portfólio Rails com autenticação (Devise), dashboard com 4 quadrantes (tabela de usuários, pizza de times, barras de faixa etária, tabela do Brasileirão) e integração opcional com APIs de futebol.
-- **Status:** Implementado localmente. Passos 9–14 e 15–16 concluídos; preparo para deploy (Render) configurado.
+Este repositório é o meu portfólio pessoal em produção — não é um boilerplate, é a aplicação real que está no ar agora. Construí ele para resolver dois problemas ao mesmo tempo: ter uma landing page profissional para recrutadores e, na mesma aplicação, demonstrar na prática um ciclo completo de engenharia backend que normalmente não cabe num portfólio estático — autenticação, modelagem de dados, agregação SQL, visualização de dados e consumo de API externa, tudo rodando atrás de login.
 
-**O que foi feito**
-- **Auth + Layout:** Implementado com `Devise`, views customizadas e layout Tailwind (paleta `midnight`, `slate`, `electric`, `soft-white`, `muted`, `success`).
-- **Dashboard:** `DashboardController#index` com proteção `before_action :authenticate_user!` e grid 2x2 responsivo.
-- **Tabela de usuários:** Paginação com `kaminari` (10 por página), destaque do usuário logado.
-- **Gráficos:** `chartkick` + `chart.js` (CDN) — pizza (`@clubs_chart`) e barras (`@age_chart`).
-- **API Brasileirão:** `app/services/brasileirao_service.rb` configurado para API-Football, liga 71, temporada 2026, usando `API_FOOTBALL_KEY`.
-- **Produção / Deploy:** `config/database.yml` atualizado para `postgresql` em produção; `config/environments/production.rb` ajustado; `render.yaml` e `.env.example` adicionados.
+A ideia por trás do dashboard: qualquer pessoa pode se cadastrar escolhendo um time da Série A do Brasileirão, e o dashboard agrega esses cadastros em tempo real (distribuição por time, faixa etária) ao lado da tabela de classificação real do Brasileirão, consumida via API externa.
 
-**Como rodar localmente**
-- Instale dependências e prepare o banco:
 
-```
+✨ Funcionalidades
+
+Área pública
+
+
+Landing page com hero, sobre mim, projetos e habilidades
+Seção de projetos com links reais — incluindo este próprio dashboard, um vídeo de demonstração de um sistema de navegação robótica e um e-commerce com gateway de pagamento
+Formulário de contato persistido em banco
+
+
+Autenticação
+
+
+Cadastro e login via Devise, com campos customizados (nome, idade, time de coração)
+Time limitado a uma lista fechada dos 20 clubes da Série A — sem texto livre, sem dado sujo no banco
+
+
+Dashboard autenticado (/dashboard, protegido por before_action :authenticate_user!)
+
+
+Tabela paginada dos usuários cadastrados, com destaque visual para o usuário logado
+Gráfico de pizza com a distribuição de usuários por time (Chartkick + Chart.js)
+Gráfico de barras com a distribuição por faixa etária
+Tabela de classificação do Brasileirão em tempo real, consumida via API-Football com fallback elegante em caso de falha da API externa
+
+
+
+🛠️ Stack técnica
+
+CamadaTecnologiaBackendRuby 3.3, Rails 8AutenticaçãoDeviseBanco de dadosPostgreSQLFrontendERB + Tailwind CSSVisualização de dadosChartkick + Chart.jsIntegração externaHTTParty + API-FootballQualidade de códigoRuboCop (Omakase)Dados de testeFakerInfraestruturaDocker + KamalDeployFly.io
+
+
+🏗️ Decisões de arquitetura
+
+Algumas escolhas técnicas que valem destacar:
+
+
+Service Object para a API externa (app/services/brasileirao_service.rb): a lógica de chamada HTTP, tratamento de erro e fallback fica isolada do controller. Se a API-Football cair ou expirar a chave, o dashboard continua funcionando — sem essa camada, qualquer instabilidade externa quebraria a página inteira.
+Validação de domínio fechado para o campo club: em vez de aceitar texto livre, o cadastro usa select com os 20 times da Série A e uma constante inclusion no model. Isso evita dados inconsistentes (ex: "Flamengo" vs "flamengo" vs "CRF") que quebrariam a agregação .group(:club).count usada no gráfico.
+Agregação no banco, não em Ruby: os dados dos gráficos vêm de User.group(:club).count e User.where(age: range).count — agregação delegada ao SQL em vez de carregar todos os registros e filtrar em memória.
+Seeds com Faker por time: o banco de demonstração é populado de forma proporcional entre os 20 clubes, garantindo que o gráfico de pizza nunca fique vazio ou desbalanceado para quem visita o dashboard pela primeira vez.
+
+
+
+🚀 Rodando localmente
+
+bashgit clone https://github.com/palermoc3/pedro-portfolio.git
+cd pedro-portfolio
 bundle install
+
 bin/rails db:create db:migrate db:seed
-```
-
-- Iniciar servidor:
-
-```
 bin/rails server
-```
 
-- URLs úteis:
-- **Dashboard:** `http://localhost:3000/dashboard` (requer login)
+Acesse http://localhost:3000. Para testar o dashboard, crie uma conta em /users/sign_up.
 
-**Variáveis de ambiente**
-- **Obrigatórias (produção):** `RAILS_MASTER_KEY`, `DATABASE_URL`
-- **Recomendada:** `API_FOOTBALL_KEY` — chave da API-Football para carregar a classificação do Brasileirão 2026
-- **Outras:** `RAILS_SERVE_STATIC_FILES=true`, `RAILS_LOG_TO_STDOUT=true`
 
-**Deploy no Render (rápido)**
-- Render detecta `render.yaml`. Configure no painel:
-	- Adicione `RAILS_MASTER_KEY` (valor de `config/master.key` local) como secret.
-	- Vincule o database criado pelo `render.yaml`.
-	- Configure `API_FOOTBALL_KEY` como secret para ativar a classificação via API-Football.
-	- BuildCommand e StartCommand já configurados no `render.yaml`.
+📦 Deploy
 
-**Notas sobre a API do Brasileirão**
-- A integração escolhida é a API-Football: `GET /standings?league=71&season=2026`.
-- Se `API_FOOTBALL_KEY` não estiver configurada, o service mantém dados locais para o dashboard continuar carregando.
+Aplicação containerizada com Docker e publicada via Kamal na Fly.io.
 
-**Arquivos importantes**
-- `app/services/brasileirao_service.rb` — lógica de integração com fallback
-- `app/controllers/dashboard_controller.rb` — agrega dados para a view
-- `app/views/dashboard/index.html.erb` — UI do dashboard
-- `config/database.yml`, `config/environments/production.rb`, `render.yaml`, `.env.example`
+bashkamal deploy
 
-**Próximos passos sugeridos**
-- Executar validação final local (`rails server`) e testar fluxo completo (cadastro → login → dashboard).
-- Criar repositório remoto e push, vincular ao Render e ajustar variáveis de ambiente.
-- Opcional: configurar CI (GitHub Actions) para testes e deploy automático.
 
-Se quiser, eu: 1) executo a validação local agora; 2) crio o `README` também no formato curto para o perfil público; 3) faço o push das mudanças para um repositório remoto — qual prefere que eu faça agora?
+👤 Autor
+
+Pedro Palermo Martins
+Engenheiro de Software / Full Stack, com base em Engenharia de Software, Ciência de Dados e IA aplicada.
+
+
+💼 LinkedIn
+🐙 GitHub
+📧 pedropalermo97@gmail.com
+🌐 pedro-portfolio.fly.dev
