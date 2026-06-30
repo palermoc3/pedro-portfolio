@@ -55,40 +55,113 @@
   <div class="max-w-5xl mx-auto">
     <h2 class="text-3xl font-bold text-[#F1F5F9] mb-4 font-['Space_Grotesk']">Projetos</h2>
     <div class="w-12 h-1 bg-[#6366F1] mb-10 rounded"></div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <% [
+
+    <%
+      projects = [
         {
           name: "Portfólio com Dashboard",
           desc: "Portfólio pessoal com autenticação, dashboard de infográficos e integração com API do Brasileirão.",
-          github: "#",
-          demo: "#"
+          tags: ["Ruby on Rails", "PostgreSQL", "APIs"],
+          demo: "/dashboard",
+          github: "https://github.com/palermoc3/pedro-portfolio",
+          icon: "📊"
         },
         {
-          name: "App de Gestão de Tarefas",
-          desc: "CRUD completo com Rails, drag-and-drop entre colunas e autenticação por usuário.",
-          github: "#",
-          demo: "#"
+          name: "Sistema de Navegação para Robô Autônomo",
+          desc: "Desenvolvimento de lógica de controle baseada em sensores para seguimento de linha e evasão de obstáculos em ambiente simulado.",
+          tags: ["Python", "Algoritmos", "Simulação"],
+          demo: "https://www.youtube.com/watch?v=_gg8VvAYraU",
+          github: "https://github.com/palermoc3",
+          icon: "🤖"
         },
         {
-          name: "API REST de Produtos",
-          desc: "API JSON com Rails, autenticação via token, paginação e documentação Swagger.",
-          github: "#",
-          demo: "#"
+          name: "Ecommerce Portfólio",
+          desc: "Exibição de loja virtual modular contendo fluxos completos de autenticação robusta, integração de gateways de pagamentos e upload de mídias.",
+          tags: ["Ruby on Rails", "JavaScript", "Vue.js"],
+          demo: "https://www.youtube.com/watch?v=LSvSzZZag3Y",
+          github: "https://github.com/palermoc3",
+          icon: "🛒"
+        },
+        {
+         name: "XLSX E-commerce IA",
+         desc: "Geração e validação de dataset analítico de e-commerce em XLSX, além de queries de negócio para métricas como ticket médio, margem, ranking de produtos e lucro mensal.",
+         tags: ["Ruby on Rails", "SQLite", "caxlsx", "Business Intelligence"],
+         demo: "https://github.com/palermoc3/xlsx_ecommerce_ia/",
+          github: "https://github.com/palermoc3/xlsx_ecommerce_ia/",
+          icon: "📈"
         }
-      ].each do |project| %>
-        <div class="bg-[#0F172A] rounded-xl overflow-hidden border border-[#1E293B] hover:border-[#6366F1] hover:shadow-lg hover:shadow-indigo-900/30 hover:scale-[1.02] transition duration-200">
-          <div class="h-40 bg-gradient-to-br from-[#1E293B] to-[#0F172A] flex items-center justify-center">
-            <span class="text-4xl">🛠️</span>
+      ]
+    %>
+
+    <%
+      carousel_enabled = projects.size > 3
+      collection_classes = carousel_enabled ? "flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" : "grid grid-cols-1 gap-5 md:grid-cols-3"
+      item_classes = carousel_enabled ? "min-w-0 shrink-0 basis-full snap-start sm:basis-[calc((100%-1.25rem)/2)] lg:basis-[calc((100%-2.5rem)/3)]" : ""
+    %>
+
+    <div data-controller="<%= "projects-carousel" if carousel_enabled %>" class="relative">
+      <div class="<%= collection_classes %>" <%= 'data-projects-carousel-target="track" data-action="scroll->projects-carousel#update"'.html_safe if carousel_enabled %>>
+        <% projects.each_with_index do |project, index| %>
+          <div class="<%= item_classes %>" <%= 'data-projects-carousel-target="item"'.html_safe if carousel_enabled %>>
+            <% demo_options = { class: "absolute inset-0 z-10", aria: { label: "Abrir apresentação de #{project[:name]}" } } %>
+            <% demo_options.merge!(target: "_blank", rel: "noopener") if project[:demo].start_with?("http") %>
+
+            <article class="group relative flex h-[18rem] flex-col overflow-hidden rounded-lg border border-[#334155] bg-[#0F172A] shadow-lg shadow-black/10 transition duration-200 hover:-translate-y-1 hover:border-[#6366F1] hover:shadow-indigo-950/30">
+              <%= link_to project[:demo], demo_options do %>
+                <span class="sr-only">Abrir apresentação de <%= project[:name] %></span>
+              <% end %>
+
+              <div class="pointer-events-none relative h-24 overflow-hidden border-b border-[#1E293B] bg-[#1E293B]">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(99,102,241,0.22),_transparent_36%),linear-gradient(135deg,_#1E293B,_#0F172A)]"></div>
+                <div class="relative flex h-full items-center justify-center">
+                  <span class="text-4xl transition duration-200 group-hover:scale-110"><%= project[:icon] %></span>
+                </div>
+                <div class="absolute left-3 top-3 rounded-full border border-[#6366F1]/40 bg-[#0F172A]/80 px-2.5 py-1 text-[11px] font-medium text-[#F1F5F9] backdrop-blur">
+                  Projeto
+                </div>
+                <div class="absolute bottom-3 right-3 rounded-full bg-[#10B981]/10 px-2.5 py-1 text-[11px] font-semibold text-[#10B981] opacity-0 transition duration-200 group-hover:opacity-100">
+                  Ver apresentação ↗
+                </div>
+              </div>
+
+              <div class="pointer-events-none relative z-20 flex flex-1 flex-col justify-between p-4">
+                <div>
+                  <h3 class="mb-2 line-clamp-2 min-h-10 text-base font-bold leading-snug text-[#F1F5F9] transition duration-200 group-hover:text-[#6366F1] font-['Space_Grotesk']" title="<%= project[:name] %>">
+                    <%= project[:name] %>
+                  </h3>
+                  <p class="line-clamp-3 text-sm leading-relaxed text-[#94A3B8]"><%= project[:desc] %></p>
+                </div>
+
+                <div class="mt-4 flex max-h-14 flex-wrap items-start gap-1.5 overflow-hidden" title="Habilidades técnicas utilizadas">
+                  <%= link_to project[:github], target: "_blank", rel: "noopener", class: "pointer-events-auto relative z-30 rounded-full border border-[#10B981]/50 bg-[#10B981]/10 px-2.5 py-1 text-[11px] font-semibold text-[#10B981] transition duration-200 hover:border-[#10B981] hover:bg-[#10B981]/20" do %>
+                    GitHub ↗
+                  <% end %>
+                  <% project[:tags].each do |tag| %>
+                    <span class="max-w-[8.5rem] truncate rounded-full border border-[#6366F1]/30 bg-[#1E293B]/70 px-2.5 py-1 text-[11px] font-medium text-[#F1F5F9] transition duration-200 group-hover:border-[#6366F1]/60">
+                      <%= tag %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </article>
           </div>
-          <div class="p-5">
-            <h3 class="text-[#F1F5F9] font-bold text-lg mb-2 font-['Space_Grotesk']"><%= project[:name] %></h3>
-            <p class="text-[#94A3B8] text-sm mb-4 leading-relaxed"><%= project[:desc] %></p>
-            <div class="flex gap-3">
-              <a href="<%= project[:github] %>" class="text-xs text-[#6366F1] border border-[#6366F1] px-3 py-1 rounded hover:bg-[#6366F1] hover:text-white transition duration-200">GitHub</a>
-              <a href="<%= project[:demo] %>" class="text-xs text-[#10B981] border border-[#10B981] px-3 py-1 rounded hover:bg-[#10B981] hover:text-white transition duration-200">Demo</a>
-            </div>
-          </div>
+        <% end %>
+      </div>
+
+      <% if carousel_enabled %>
+        <div class="mt-5 flex items-center justify-center gap-2">
+          <% projects.each_with_index do |project, index| %>
+            <button type="button" class="h-2.5 w-2.5 rounded-full bg-[#94A3B8]/45 transition-all duration-200 hover:bg-[#6366F1]" aria-label="Ir para <%= project[:name] %>" data-projects-carousel-target="dot" data-action="projects-carousel#goTo" data-projects-carousel-index-param="<%= index %>"></button>
+          <% end %>
         </div>
+
+        <button type="button" class="absolute left-0 top-[8.75rem] z-30 hidden h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-[#334155] bg-[#0F172A]/95 text-[#F1F5F9] shadow-lg shadow-black/20 transition duration-200 hover:border-[#6366F1] hover:text-[#6366F1] focus:outline-none focus:ring-2 focus:ring-[#6366F1]/60 md:flex" data-action="projects-carousel#previous" aria-label="Projetos anteriores">
+          <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
+        </button>
+
+        <button type="button" class="absolute right-0 top-[8.75rem] z-30 hidden h-10 w-10 translate-x-1/2 items-center justify-center rounded-full border border-[#334155] bg-[#0F172A]/95 text-[#F1F5F9] shadow-lg shadow-black/20 transition duration-200 hover:border-[#6366F1] hover:text-[#6366F1] focus:outline-none focus:ring-2 focus:ring-[#6366F1]/60 md:flex" data-action="projects-carousel#next" aria-label="Próximos projetos">
+          <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+        </button>
       <% end %>
     </div>
   </div>

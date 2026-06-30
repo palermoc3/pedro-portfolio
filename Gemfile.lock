@@ -117,6 +117,8 @@ GEM
       railties (>= 7.0)
       responders
       warden (~> 1.2.3)
+    dockerfile-rails (1.7.10)
+      rails (>= 3.0.0)
     dotenv (3.2.0)
     drb (2.2.3)
     ed25519 (1.4.0)
@@ -456,6 +458,7 @@ DEPENDENCIES
   chartkick
   debug
   devise
+  dockerfile-rails (>= 1.7)
   faker
   httparty
   image_processing (~> 1.2)
