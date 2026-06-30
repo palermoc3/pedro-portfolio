@@ -21,7 +21,7 @@ config.public_file_server.headers = {
   config.force_ssl = true
 
   # Logging
-  config.log_tags = [:request_id]
+  config.log_tags = [ :request_id ]
   config.logger = ActiveSupport::TaggedLogging.logger(STDOUT)
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 

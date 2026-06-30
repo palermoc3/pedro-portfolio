@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["track", "item", "dot"]
+  static targets = ["track", "item", "dot", "current"]
 
   connect() {
     this.update()
@@ -39,8 +39,13 @@ export default class extends Controller {
 
       dot.setAttribute("aria-current", isCurrent)
       dot.classList.toggle("w-6", isCurrent)
+      dot.classList.toggle("w-2.5", !isCurrent)
       dot.classList.toggle("bg-[#6366F1]", isCurrent)
       dot.classList.toggle("bg-[#94A3B8]/45", !isCurrent)
+    })
+
+    this.currentTargets.forEach((current) => {
+      current.textContent = `${currentIndex + 1} / ${this.itemTargets.length}`
     })
   }
 

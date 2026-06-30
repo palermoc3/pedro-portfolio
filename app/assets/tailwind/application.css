@@ -1,3 +1,66 @@
 @import "tailwindcss";
 @source "../../../app/views/**/*.erb";
 @source "../../../app/javascript/**/*.js";
+
+@layer components {
+  .projects-carousel {
+    position: relative;
+  }
+
+  .projects-carousel-track {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .projects-carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .project-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+
+  .project-card {
+    position: relative;
+    display: flex;
+    height: 18rem;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid #334155;
+    background-color: #0F172A;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+  }
+
+  .project-card:hover {
+    border-color: #6366F1;
+    box-shadow: 0 10px 15px -3px rgb(30 27 75 / 0.3), 0 4px 6px -4px rgb(30 27 75 / 0.3);
+    transform: translateY(-0.25rem);
+  }
+
+  .project-card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
+
+  @media (min-width: 640px) {
+    .project-slide {
+      flex-basis: calc(50% - 0.625rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .project-slide {
+      flex-basis: calc(33.333333% - 0.833333rem);
+    }
+  }
+}

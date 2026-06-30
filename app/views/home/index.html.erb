@@ -71,7 +71,6 @@
           desc: "Desenvolvimento de lógica de controle baseada em sensores para seguimento de linha e evasão de obstáculos em ambiente simulado.",
           tags: ["Python", "Algoritmos", "Simulação"],
           demo: "https://www.youtube.com/watch?v=_gg8VvAYraU",
-          github: "https://github.com/palermoc3",
           icon: "🤖"
         },
         {
@@ -79,7 +78,7 @@
           desc: "Exibição de loja virtual modular contendo fluxos completos de autenticação robusta, integração de gateways de pagamentos e upload de mídias.",
           tags: ["Ruby on Rails", "JavaScript", "Vue.js"],
           demo: "https://www.youtube.com/watch?v=LSvSzZZag3Y",
-          github: "https://github.com/palermoc3",
+          github: "https://github.com/palermoc3/LojaVirtual",
           icon: "🛒"
         },
         {
@@ -95,29 +94,32 @@
 
     <%
       carousel_enabled = projects.size > 3
-      collection_classes = carousel_enabled ? "flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" : "grid grid-cols-1 gap-5 md:grid-cols-3"
-      item_classes = carousel_enabled ? "min-w-0 shrink-0 basis-full snap-start sm:basis-[calc((100%-1.25rem)/2)] lg:basis-[calc((100%-2.5rem)/3)]" : ""
+      collection_classes = carousel_enabled ? "projects-carousel-track" : "grid grid-cols-1 gap-5 md:grid-cols-3"
+      item_classes = carousel_enabled ? "project-slide" : ""
     %>
 
-    <div data-controller="<%= "projects-carousel" if carousel_enabled %>" class="relative">
+    <div data-controller="<%= "projects-carousel" if carousel_enabled %>" class="projects-carousel">
+
+
+      <% if carousel_enabled %>
+        <div class="mt-5 flex items-center justify-between gap-4">
+          <button type="button" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#334155] bg-[#0F172A] text-[#F1F5F9] shadow-lg shadow-black/20 transition duration-200 hover:border-[#6366F1] hover:text-[#6366F1] focus:outline-none focus:ring-2 focus:ring-[#6366F1]/60" data-action="projects-carousel#previous" aria-label="Projetos anteriores">
+            <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
+          </button>
+
       <div class="<%= collection_classes %>" <%= 'data-projects-carousel-target="track" data-action="scroll->projects-carousel#update"'.html_safe if carousel_enabled %>>
         <% projects.each_with_index do |project, index| %>
           <div class="<%= item_classes %>" <%= 'data-projects-carousel-target="item"'.html_safe if carousel_enabled %>>
-            <% demo_options = { class: "absolute inset-0 z-10", aria: { label: "Abrir apresentação de #{project[:name]}" } } %>
+            <% demo_options = { class: "project-card-link", aria: { label: "Abrir apresentação de #{project[:name]}" } } %>
             <% demo_options.merge!(target: "_blank", rel: "noopener") if project[:demo].start_with?("http") %>
 
-            <article class="group relative flex h-[18rem] flex-col overflow-hidden rounded-lg border border-[#334155] bg-[#0F172A] shadow-lg shadow-black/10 transition duration-200 hover:-translate-y-1 hover:border-[#6366F1] hover:shadow-indigo-950/30">
-              <%= link_to project[:demo], demo_options do %>
-                <span class="sr-only">Abrir apresentação de <%= project[:name] %></span>
-              <% end %>
+            <article class="project-card group">
+              <%= link_to "", project[:demo], demo_options %>
 
               <div class="pointer-events-none relative h-24 overflow-hidden border-b border-[#1E293B] bg-[#1E293B]">
                 <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(99,102,241,0.22),_transparent_36%),linear-gradient(135deg,_#1E293B,_#0F172A)]"></div>
                 <div class="relative flex h-full items-center justify-center">
                   <span class="text-4xl transition duration-200 group-hover:scale-110"><%= project[:icon] %></span>
-                </div>
-                <div class="absolute left-3 top-3 rounded-full border border-[#6366F1]/40 bg-[#0F172A]/80 px-2.5 py-1 text-[11px] font-medium text-[#F1F5F9] backdrop-blur">
-                  Projeto
                 </div>
                 <div class="absolute bottom-3 right-3 rounded-full bg-[#10B981]/10 px-2.5 py-1 text-[11px] font-semibold text-[#10B981] opacity-0 transition duration-200 group-hover:opacity-100">
                   Ver apresentação ↗
@@ -132,9 +134,11 @@
                   <p class="line-clamp-3 text-sm leading-relaxed text-[#94A3B8]"><%= project[:desc] %></p>
                 </div>
 
-                <div class="mt-4 flex max-h-14 flex-wrap items-start gap-1.5 overflow-hidden" title="Habilidades técnicas utilizadas">
-                  <%= link_to project[:github], target: "_blank", rel: "noopener", class: "pointer-events-auto relative z-30 rounded-full border border-[#10B981]/50 bg-[#10B981]/10 px-2.5 py-1 text-[11px] font-semibold text-[#10B981] transition duration-200 hover:border-[#10B981] hover:bg-[#10B981]/20" do %>
-                    GitHub ↗
+                <div class="mt-4 flex max-h-14 flex-wrap items-start gap-1.5 overflow-hidden" title="Repositório do Projeto">
+                  <% if project[:github].present? %>
+                    <%= link_to project[:github], target: "_blank", rel: "noopener", class: "pointer-events-auto relative z-30 rounded-full border border-[#10B981]/50 bg-[#10B981]/10 px-2.5 py-1 text-[11px] font-semibold text-[#10B981] transition duration-200 hover:border-[#10B981] hover:bg-[#10B981]/20" do %>
+                      GitHub ↗
+                    <% end %>
                   <% end %>
                   <% project[:tags].each do |tag| %>
                     <span class="max-w-[8.5rem] truncate rounded-full border border-[#6366F1]/30 bg-[#1E293B]/70 px-2.5 py-1 text-[11px] font-medium text-[#F1F5F9] transition duration-200 group-hover:border-[#6366F1]/60">
@@ -148,20 +152,10 @@
         <% end %>
       </div>
 
-      <% if carousel_enabled %>
-        <div class="mt-5 flex items-center justify-center gap-2">
-          <% projects.each_with_index do |project, index| %>
-            <button type="button" class="h-2.5 w-2.5 rounded-full bg-[#94A3B8]/45 transition-all duration-200 hover:bg-[#6366F1]" aria-label="Ir para <%= project[:name] %>" data-projects-carousel-target="dot" data-action="projects-carousel#goTo" data-projects-carousel-index-param="<%= index %>"></button>
-          <% end %>
+          <button type="button" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#334155] bg-[#0F172A] text-[#F1F5F9] shadow-lg shadow-black/20 transition duration-200 hover:border-[#6366F1] hover:text-[#6366F1] focus:outline-none focus:ring-2 focus:ring-[#6366F1]/60" data-action="projects-carousel#next" aria-label="Próximos projetos">
+            <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+          </button>
         </div>
-
-        <button type="button" class="absolute left-0 top-[8.75rem] z-30 hidden h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-[#334155] bg-[#0F172A]/95 text-[#F1F5F9] shadow-lg shadow-black/20 transition duration-200 hover:border-[#6366F1] hover:text-[#6366F1] focus:outline-none focus:ring-2 focus:ring-[#6366F1]/60 md:flex" data-action="projects-carousel#previous" aria-label="Projetos anteriores">
-          <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
-        </button>
-
-        <button type="button" class="absolute right-0 top-[8.75rem] z-30 hidden h-10 w-10 translate-x-1/2 items-center justify-center rounded-full border border-[#334155] bg-[#0F172A]/95 text-[#F1F5F9] shadow-lg shadow-black/20 transition duration-200 hover:border-[#6366F1] hover:text-[#6366F1] focus:outline-none focus:ring-2 focus:ring-[#6366F1]/60 md:flex" data-action="projects-carousel#next" aria-label="Próximos projetos">
-          <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
-        </button>
       <% end %>
     </div>
   </div>
