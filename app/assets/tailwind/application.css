@@ -2,7 +2,270 @@
 @source "../../../app/views/**/*.erb";
 @source "../../../app/javascript/**/*.js";
 
+@theme {
+  --color-midnight: #0F172A;
+  --color-slate: #1E293B;
+  --color-electric: #6366F1;
+  --color-soft-white: #F1F5F9;
+  --color-muted: #94A3B8;
+  --color-success: #10B981;
+  --font-sans: "Inter", sans-serif;
+  --font-title: "Space Grotesk", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Inter", sans-serif;
+  }
+}
+
 @layer components {
+  .page-shell {
+    @apply min-h-screen bg-midnight px-4 py-8 sm:px-6 lg:px-8;
+  }
+
+  .content-container {
+    @apply mx-auto max-w-6xl;
+  }
+
+  .content-container-wide {
+    @apply mx-auto max-w-[96rem];
+  }
+
+  .section-panel {
+    @apply bg-slate rounded-lg p-6 shadow-xl shadow-black/10 lg:p-8;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold text-soft-white font-title;
+  }
+
+  .panel-title {
+    @apply text-xl font-bold text-soft-white font-title;
+  }
+
+  .section-accent {
+    @apply mt-4 mb-8 h-1 w-12 rounded bg-electric;
+  }
+
+  .flash-message {
+    @apply fixed right-4 top-20 z-50 rounded-lg px-4 py-3 text-sm text-white shadow-lg;
+  }
+
+  .flash-notice {
+    @apply fixed right-4 top-20 z-50 rounded-lg bg-success px-4 py-3 text-sm text-white shadow-lg;
+  }
+
+  .flash-alert {
+    @apply fixed right-4 top-20 z-50 rounded-lg bg-red-500 px-4 py-3 text-sm text-white shadow-lg;
+  }
+
+  .home-section {
+    @apply border-t border-slate-800 bg-midnight px-6 py-12;
+  }
+
+  .home-section-muted {
+    @apply bg-slate px-6 py-12;
+  }
+
+  .home-section-inner {
+    @apply mx-auto max-w-4xl;
+  }
+
+  .home-section-inner-wide {
+    @apply mx-auto max-w-5xl;
+  }
+
+  .nav-link {
+    @apply inline-block rounded-lg border border-electric/20 bg-electric/10 px-4 py-2 text-center text-sm font-medium text-indigo-300 transition-colors hover:bg-electric/20 hover:text-indigo-200 focus:outline-none focus:ring-2 focus:ring-electric/70;
+  }
+
+  .nav-link-danger {
+    @apply inline-block rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2 text-center text-sm font-medium text-red-300 transition-colors hover:bg-red-500/20 hover:text-red-200 focus:outline-none focus:ring-2 focus:ring-red-500/60;
+  }
+
+  .mobile-nav-link {
+    @apply rounded-lg border border-electric/20 bg-electric/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-electric/20 focus:outline-none focus:ring-2 focus:ring-electric/70;
+  }
+
+  .mobile-nav-link-success {
+    @apply rounded-lg border border-success/30 bg-success/10 px-4 py-3 text-success transition duration-200 hover:bg-success/20 focus:outline-none focus:ring-2 focus:ring-success/60;
+  }
+
+  .mobile-nav-button-danger {
+    @apply w-full rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-left text-sm font-medium text-red-300 transition duration-200 hover:bg-red-500/20 focus:outline-none focus:ring-2 focus:ring-red-500/60;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-electric px-5 py-3 font-semibold text-white transition duration-200 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-electric/70 focus:ring-offset-2 focus:ring-offset-midnight;
+  }
+
+  .btn-primary-full {
+    @apply inline-flex w-full cursor-pointer items-center justify-center rounded-lg bg-electric px-5 py-3 font-semibold text-white transition duration-200 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-electric/70 focus:ring-offset-2 focus:ring-offset-midnight;
+  }
+
+  .icon-button {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-600 bg-midnight text-soft-white shadow-lg shadow-black/20 transition duration-200 hover:border-electric hover:text-electric focus:outline-none focus:ring-2 focus:ring-electric/60;
+  }
+
+  .carousel-button {
+    @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-600 bg-midnight text-soft-white shadow-lg shadow-black/20 transition duration-200 hover:border-electric hover:text-electric focus:outline-none focus:ring-2 focus:ring-electric/60;
+  }
+
+  .auth-page {
+    @apply flex min-h-screen items-center justify-center bg-midnight px-4 py-10;
+  }
+
+  .auth-card {
+    @apply w-full max-w-md rounded-lg bg-slate p-8 shadow-xl shadow-black/20;
+  }
+
+  .auth-title {
+    @apply mb-2 text-3xl font-bold text-soft-white font-title;
+  }
+
+  .auth-subtitle {
+    @apply mb-8 text-sm text-muted;
+  }
+
+  .form-group {
+    @apply mb-5;
+  }
+
+  .form-label {
+    @apply mb-1 block text-sm text-muted;
+  }
+
+  .form-input {
+    @apply w-full rounded-lg border border-slate-600 bg-midnight px-4 py-3 text-soft-white transition duration-200 focus:border-electric focus:outline-none focus:ring-2 focus:ring-electric/30;
+  }
+
+  .form-select {
+    @apply w-full rounded-lg border border-slate-600 bg-midnight px-4 py-3 text-soft-white transition duration-200 focus:border-electric focus:outline-none focus:ring-2 focus:ring-electric/30;
+  }
+
+  .form-select option {
+    color: #111827;
+  }
+
+  .text-link {
+    @apply font-medium text-electric transition duration-200 hover:text-indigo-300 hover:underline;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply inline-flex items-center rounded-full bg-success/20 px-2.5 py-1 text-xs font-medium text-success;
+  }
+
+  .badge-electric {
+    @apply inline-flex items-center rounded-full bg-electric/20 px-2.5 py-1 text-xs font-medium text-electric;
+  }
+
+  .badge-soft {
+    @apply inline-flex items-center rounded-full bg-soft-white/10 px-2.5 py-1 text-xs font-medium text-soft-white;
+  }
+
+  .skill-badge {
+    @apply rounded-full border border-electric/40 bg-slate px-4 py-2 text-sm font-medium text-soft-white transition duration-200 hover:border-electric hover:text-electric;
+  }
+
+  .soft-skill-card {
+    @apply flex items-center gap-3 rounded-lg bg-slate px-4 py-3 text-soft-white;
+  }
+
+  .project-card-media {
+    @apply pointer-events-none relative h-24 overflow-hidden border-b border-slate bg-slate;
+  }
+
+  .project-card-visual {
+    background:
+      radial-gradient(circle at top left, rgb(99 102 241 / 0.22), transparent 36%),
+      linear-gradient(135deg, #1E293B, #0F172A);
+  }
+
+  .project-card-kicker {
+    @apply absolute bottom-3 right-3 rounded-full bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success opacity-0 transition duration-200 group-hover:opacity-100;
+  }
+
+  .project-card-title {
+    @apply mb-2 line-clamp-2 min-h-10 text-base font-bold leading-snug text-soft-white transition duration-200 group-hover:text-electric font-title;
+  }
+
+  .project-card-description {
+    @apply line-clamp-3 text-sm leading-relaxed text-muted;
+  }
+
+  .project-github-link {
+    @apply pointer-events-auto relative z-30 rounded-full border border-success/50 bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success transition duration-200 hover:border-success hover:bg-success/20;
+  }
+
+  .project-tag {
+    @apply max-w-[8.5rem] truncate rounded-full border border-electric/30 bg-slate/70 px-2.5 py-1 text-[11px] font-medium text-soft-white transition duration-200 group-hover:border-electric/60;
+  }
+
+  .contact-link {
+    @apply flex items-center space-x-2 rounded-lg border border-slate-800 bg-slate/40 px-3 py-1.5 text-muted transition-all hover:border-electric/30 hover:bg-electric/10 hover:text-indigo-400;
+  }
+
+  .dashboard-grid {
+    @apply grid grid-cols-1 gap-10 xl:grid-cols-5 xl:items-start;
+  }
+
+  .dashboard-card {
+    @apply rounded-lg bg-slate p-6 shadow-xl shadow-black/10 lg:p-8;
+  }
+
+  .dashboard-table-wrap {
+    @apply overflow-x-auto rounded-lg border border-midnight/30;
+  }
+
+  .dashboard-table {
+    @apply w-full text-sm;
+  }
+
+  .dashboard-table-head {
+    @apply border-b border-midnight bg-slate;
+  }
+
+  .dashboard-th {
+    @apply px-5 py-4 text-left font-semibold text-muted;
+  }
+
+  .dashboard-th-center {
+    @apply px-5 py-4 text-center font-semibold text-muted;
+  }
+
+  .dashboard-row {
+    @apply border-b border-midnight/20 transition-colors hover:bg-midnight/20;
+  }
+
+  .dashboard-td {
+    @apply px-5 py-4 text-soft-white;
+  }
+
+  .dashboard-td-muted {
+    @apply px-5 py-4 text-muted;
+  }
+
+  .dashboard-td-center {
+    @apply px-5 py-4 text-center text-muted;
+  }
+
+  .pagination-link {
+    @apply rounded bg-slate px-3 py-2 text-sm text-soft-white transition-colors hover:bg-electric;
+  }
+
+  .pagination-current {
+    @apply rounded bg-electric px-3 py-2 text-sm font-semibold text-soft-white;
+  }
+
   .desktop-navigation {
     display: none;
   }

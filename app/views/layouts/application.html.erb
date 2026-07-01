@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" style="scroll-behavior: smooth;">
+<html lang="pt-BR">
   <head>
     <title><%= content_for(:title) || "Pedro Portfolio" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -28,133 +28,220 @@
     <script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.0"></script>
 
     <style>
-      .desktop-navigation {
-        display: none;
+      :root {
+        --midnight: #0F172A;
+        --slate: #1E293B;
+        --electric: #6366F1;
+        --soft-white: #F1F5F9;
+        --muted: #94A3B8;
+        --success: #10B981;
       }
 
-      .mobile-menu-button {
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      .font-title { font-family: "Space Grotesk", sans-serif; }
+      .bg-midnight { background-color: var(--midnight); }
+      .bg-midnight\/40 { background-color: rgb(15 23 42 / 0.4); }
+      .bg-midnight\/80 { background-color: rgb(15 23 42 / 0.8); }
+      .bg-slate { background-color: var(--slate); }
+      .bg-slate\/20 { background-color: rgb(30 41 59 / 0.2); }
+      .text-soft-white { color: var(--soft-white); }
+      .text-muted { color: var(--muted); }
+      .text-electric { color: var(--electric); }
+      .text-success { color: var(--success); }
+      .border-electric\/30 { border-color: rgb(99 102 241 / 0.3); }
+      .border-electric\/40 { border-color: rgb(99 102 241 / 0.4); }
+      .border-midnight\/20 { border-color: rgb(15 23 42 / 0.2); }
+      .border-midnight\/30 { border-color: rgb(15 23 42 / 0.3); }
+      .hover\:bg-midnight\/20:hover { background-color: rgb(15 23 42 / 0.2); }
+      .hover\:bg-electric\/20:hover { background-color: rgb(99 102 241 / 0.2); }
+      .hover\:text-electric:hover { color: var(--electric); }
+      .hover\:text-soft-white:hover { color: var(--soft-white); }
+      .focus\:ring-electric\/70:focus { --tw-ring-color: rgb(99 102 241 / 0.7); }
+      .accent-electric { accent-color: var(--electric); }
+
+      .content-container { width: 100%; max-width: 72rem; margin-inline: auto; }
+      .content-container-wide { width: 100%; max-width: 96rem; margin-inline: auto; }
+      .page-shell { min-height: 100vh; background-color: var(--midnight); padding: 2rem 1rem; }
+      .section-title { font-family: "Space Grotesk", sans-serif; font-size: 1.875rem; line-height: 2.25rem; font-weight: 700; color: var(--soft-white); }
+      .panel-title { font-family: "Space Grotesk", sans-serif; font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; color: var(--soft-white); }
+      .section-accent { width: 3rem; height: 0.25rem; margin: 1rem 0 2rem; border-radius: 9999px; background-color: var(--electric); }
+
+      .nav-link,
+      .mobile-nav-link {
+        display: inline-block;
+        border: 1px solid rgb(99 102 241 / 0.2);
+        border-radius: 0.5rem;
+        background-color: rgb(99 102 241 / 0.1);
+        color: #A5B4FC;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+      }
+
+      .nav-link { padding: 0.5rem 1rem; text-align: center; }
+      .mobile-nav-link { padding: 0.75rem 1rem; }
+      .nav-link:hover,
+      .mobile-nav-link:hover { background-color: rgb(99 102 241 / 0.2); color: #C7D2FE; }
+
+      .nav-link-danger,
+      .mobile-nav-button-danger {
+        border: 1px solid rgb(239 68 68 / 0.3);
+        border-radius: 0.5rem;
+        background-color: rgb(239 68 68 / 0.1);
+        color: #FCA5A5;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background-color 200ms ease, color 200ms ease;
+      }
+
+      .nav-link-danger { display: inline-block; padding: 0.5rem 1rem; text-align: center; }
+      .mobile-nav-button-danger { width: 100%; padding: 0.75rem 1rem; text-align: left; }
+      .nav-link-danger:hover,
+      .mobile-nav-button-danger:hover { background-color: rgb(239 68 68 / 0.2); color: #FECACA; }
+      .mobile-nav-link-success { border: 1px solid rgb(16 185 129 / 0.3); border-radius: 0.5rem; background-color: rgb(16 185 129 / 0.1); color: var(--success); padding: 0.75rem 1rem; transition: background-color 200ms ease; }
+      .mobile-nav-link-success:hover { background-color: rgb(16 185 129 / 0.2); }
+
+      .home-section { border-top: 1px solid #1F2937; background-color: var(--midnight); padding: 3rem 1.5rem; }
+      .home-section-muted { background-color: var(--slate); padding: 3rem 1.5rem; }
+      .home-section-inner { max-width: 56rem; margin-inline: auto; }
+      .home-section-inner-wide { max-width: 64rem; margin-inline: auto; }
+      .flash-notice,
+      .flash-alert { position: fixed; top: 5rem; right: 1rem; z-index: 50; border-radius: 0.5rem; padding: 0.75rem 1rem; color: white; font-size: 0.875rem; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+      .flash-notice { background-color: var(--success); }
+      .flash-alert { background-color: #EF4444; }
+
+      .carousel-button {
         display: inline-flex;
-        height: 2.75rem;
-        width: 2.75rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        flex-shrink: 0;
         align-items: center;
         justify-content: center;
-      }
-
-      .mobile-menu-icon {
-        display: flex;
-        flex-direction: column;
-        gap: 0.375rem;
-      }
-
-      .mobile-menu-line {
-        display: block;
-        height: 0.125rem;
-        width: 1.5rem;
+        border: 1px solid #475569;
         border-radius: 9999px;
-        background-color: currentColor;
-        transition: opacity 200ms ease, transform 200ms ease;
+        background-color: var(--midnight);
+        color: var(--soft-white);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2);
+        transition: border-color 200ms ease, color 200ms ease;
       }
 
-      .mobile-menu-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 40;
-        display: none;
-        background-color: rgb(15 23 42 / 0.7);
-        opacity: 0;
-        backdrop-filter: blur(8px);
-        transition: opacity 300ms ease;
-      }
+      .carousel-button:hover { border-color: var(--electric); color: var(--electric); }
+      .soft-skill-card { display: flex; align-items: center; gap: 0.75rem; border-radius: 0.5rem; background-color: var(--slate); color: var(--soft-white); padding: 0.75rem 1rem; }
+      .skill-badge { border: 1px solid rgb(99 102 241 / 0.4); border-radius: 9999px; background-color: var(--slate); color: var(--soft-white); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; transition: border-color 200ms ease, color 200ms ease; }
+      .skill-badge:hover { border-color: var(--electric); color: var(--electric); }
+      .contact-link { display: flex; align-items: center; gap: 0.5rem; border: 1px solid #1F2937; border-radius: 0.5rem; background-color: rgb(30 41 59 / 0.4); color: var(--muted); padding: 0.375rem 0.75rem; transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease; }
 
-      .mobile-menu-panel {
-        position: fixed;
-        top: 0;
-        right: 0;
-        z-index: 50;
-        display: flex;
-        height: 100dvh;
-        width: 18rem;
-        max-width: 85vw;
-        flex-direction: column;
-        transform: translateX(100%);
-        transition: transform 300ms ease;
-      }
+      .project-card-media { pointer-events: none; position: relative; height: 6rem; overflow: hidden; border-bottom: 1px solid var(--slate); background-color: var(--slate); }
+      .project-card-visual { background: radial-gradient(circle at top left, rgb(99 102 241 / 0.22), transparent 36%), linear-gradient(135deg, var(--slate), var(--midnight)); }
+      .project-card-kicker { position: absolute; right: 0.75rem; bottom: 0.75rem; border-radius: 9999px; background-color: rgb(16 185 129 / 0.1); color: var(--success); padding: 0.25rem 0.625rem; font-size: 11px; font-weight: 600; opacity: 0; transition: opacity 200ms ease; }
+      .project-card:hover .project-card-kicker { opacity: 1; }
+      .project-card-title { min-height: 2.5rem; margin-bottom: 0.5rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-family: "Space Grotesk", sans-serif; font-size: 1rem; line-height: 1.375; font-weight: 700; color: var(--soft-white); transition: color 200ms ease; }
+      .project-card:hover .project-card-title { color: var(--electric); }
+      .project-card-description { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; color: var(--muted); font-size: 0.875rem; line-height: 1.625; }
+      .project-github-link { pointer-events: auto; position: relative; z-index: 30; border: 1px solid rgb(16 185 129 / 0.5); border-radius: 9999px; background-color: rgb(16 185 129 / 0.1); color: var(--success); padding: 0.25rem 0.625rem; font-size: 11px; font-weight: 600; transition: background-color 200ms ease, border-color 200ms ease; }
+      .project-github-link:hover { border-color: var(--success); background-color: rgb(16 185 129 / 0.2); }
+      .project-tag { max-width: 8.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border: 1px solid rgb(99 102 241 / 0.3); border-radius: 9999px; background-color: rgb(30 41 59 / 0.7); color: var(--soft-white); padding: 0.25rem 0.625rem; font-size: 11px; font-weight: 500; }
 
-      .site-header.is-open .mobile-menu-overlay {
-        display: block;
-        opacity: 1;
-      }
+      .auth-page { display: flex; min-height: 100vh; align-items: center; justify-content: center; background-color: var(--midnight); padding: 2.5rem 1rem; }
+      .auth-card { width: 100%; max-width: 28rem; border-radius: 0.5rem; background-color: var(--slate); padding: 2rem; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2); }
+      .auth-title { margin-bottom: 0.5rem; font-family: "Space Grotesk", sans-serif; font-size: 1.875rem; line-height: 2.25rem; font-weight: 700; color: var(--soft-white); }
+      .auth-subtitle { margin-bottom: 2rem; color: var(--muted); font-size: 0.875rem; }
+      .form-group { margin-bottom: 1.25rem; }
+      .form-label { display: block; margin-bottom: 0.25rem; color: var(--muted); font-size: 0.875rem; }
+      .form-input,
+      .form-select { width: 100%; border: 1px solid #475569; border-radius: 0.5rem; background-color: var(--midnight); color: var(--soft-white); padding: 0.75rem 1rem; transition: border-color 200ms ease, box-shadow 200ms ease; }
+      .form-input:focus,
+      .form-select:focus { border-color: var(--electric); outline: none; box-shadow: 0 0 0 2px rgb(99 102 241 / 0.3); }
+      .form-select option { color: #111827; }
+      .btn-primary-full { display: inline-flex; width: 100%; cursor: pointer; align-items: center; justify-content: center; border-radius: 0.5rem; background-color: var(--electric); color: white; padding: 0.75rem 1.25rem; font-weight: 600; transition: background-color 200ms ease; }
+      .btn-primary-full:hover { background-color: #4F46E5; }
+      .text-link { color: var(--electric); font-weight: 500; transition: color 200ms ease; }
+      .text-link:hover { color: #A5B4FC; text-decoration: underline; }
 
-      .site-header.is-open .mobile-menu-panel {
-        transform: translateX(0);
-      }
-
-      .site-header.is-open .mobile-menu-line:first-child {
-        transform: translateY(0.5rem) rotate(45deg);
-      }
-
-      .site-header.is-open .mobile-menu-line:nth-child(2) {
-        opacity: 0;
-      }
-
-      .site-header.is-open .mobile-menu-line:last-child {
-        transform: translateY(-0.5rem) rotate(-45deg);
-      }
+      .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
+      .dashboard-card { border-radius: 0.5rem; background-color: var(--slate); padding: 1.5rem; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+      .dashboard-table-wrap { overflow-x: auto; border: 1px solid rgb(15 23 42 / 0.3); border-radius: 0.5rem; }
+      .dashboard-table { width: 100%; font-size: 0.875rem; }
+      .dashboard-table-head { border-bottom: 1px solid var(--midnight); background-color: var(--slate); }
+      .dashboard-th,
+      .dashboard-th-center { padding: 1rem 1.25rem; color: var(--muted); font-weight: 600; }
+      .dashboard-th { text-align: left; }
+      .dashboard-th-center { text-align: center; }
+      .dashboard-row { border-bottom: 1px solid rgb(15 23 42 / 0.2); transition: background-color 200ms ease; }
+      .dashboard-row:hover { background-color: rgb(15 23 42 / 0.2); }
+      .dashboard-td,
+      .dashboard-td-muted,
+      .dashboard-td-center { padding: 1rem 1.25rem; }
+      .dashboard-td { color: var(--soft-white); }
+      .dashboard-td-muted,
+      .dashboard-td-center { color: var(--muted); }
+      .dashboard-td-center { text-align: center; }
+      .badge-success,
+      .badge-electric,
+      .badge-soft { display: inline-flex; align-items: center; border-radius: 9999px; padding: 0.25rem 0.625rem; font-size: 0.75rem; font-weight: 500; }
+      .badge-success { background-color: rgb(16 185 129 / 0.2); color: var(--success); }
+      .badge-electric { background-color: rgb(99 102 241 / 0.2); color: var(--electric); }
+      .badge-soft { background-color: rgb(241 245 249 / 0.1); color: var(--soft-white); }
+      .pagination-link,
+      .pagination-current { border-radius: 0.25rem; padding: 0.5rem 0.75rem; color: var(--soft-white); font-size: 0.875rem; }
+      .pagination-link { background-color: var(--slate); transition: background-color 200ms ease; }
+      .pagination-link:hover,
+      .pagination-current { background-color: var(--electric); }
 
       @media (min-width: 768px) {
-        .desktop-navigation {
-          display: flex;
-        }
+        .desktop-navigation { display: flex; }
+      }
 
-        .mobile-menu-button,
-        .mobile-menu-overlay,
-        .mobile-menu-panel {
-          display: none;
-        }
+      @media (min-width: 1024px) {
+        .page-shell { padding-inline: 2rem; }
+        .dashboard-card { padding: 2rem; }
+      }
+
+      @media (min-width: 1280px) {
+        .dashboard-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; }
       }
     </style>
   </head>
 
-  <!-- O segredo está aqui: adicionamos flex, flex-col e min-h-screen no body -->
-  <body class="bg-[#0F172A] text-[#F1F5F9] flex flex-col min-h-screen" style="font-family: 'Inter', sans-serif;">
+  <body class="flex min-h-screen flex-col bg-midnight text-soft-white">
 
 <!-- Navbar Fixa/Sticky -->
-<nav class="site-header sticky top-0 z-50 bg-[#0F172A]/80 backdrop-blur-md border-b border-slate-800 px-6 py-4" data-controller="mobile-menu" data-action="keydown.esc@window->mobile-menu#close">
-  <div class="max-w-6xl mx-auto flex justify-between items-center">
+<nav class="site-header sticky top-0 z-50 border-b border-slate-800 bg-midnight/80 px-6 py-4 backdrop-blur-md" data-controller="mobile-menu" data-action="keydown.esc@window->mobile-menu#close">
+  <div class="content-container flex items-center justify-between">
     <!-- Logo / Nome -->
-    <a href="#" class="text-xl font-bold font-['Space_Grotesk'] text-[#F1F5F9]">
+    <a href="#" class="text-xl font-bold text-soft-white font-title">
       Palermo<span class="text-indigo-500">.dev</span>
     </a>
 
     <!-- Links de Navegação e Ações -->
-    <div class="desktop-navigation space-x-6 text-sm font-medium text-[#94A3B8] items-center">
-<%= link_to "Início", root_path(anchor: "hero"),
-    class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
-    
-    <%= link_to "Sobre", root_path(anchor: "sobre"),
-    class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
-
-<%= link_to "Projetos", root_path(anchor: "projetos"),
-    class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
-
-<%= link_to "Contato", root_path(anchor: "contato"),
-    class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
+    <div class="desktop-navigation items-center space-x-6 text-sm font-medium text-muted">
+      <%= link_to "Início", root_path(anchor: "hero"), class: "nav-link" %>
+      <%= link_to "Sobre", root_path(anchor: "sobre"), class: "nav-link" %>
+      <%= link_to "Projetos", root_path(anchor: "projetos"), class: "nav-link" %>
+      <%= link_to "Contato", root_path(anchor: "contato"), class: "nav-link" %>
     
       <% if user_signed_in? %>
         <%= button_to "Sair",
             destroy_user_session_path,
             method: :delete,
             form_class: "inline",
-            class: "text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-4 py-2 rounded-lg border border-red-500/20 transition-colors text-sm font-medium cursor-pointer vertical-align-middle" %>
+            class: "nav-link-danger cursor-pointer align-middle" %>
       <% else %>
         <%= link_to "Entrar", 
             new_user_session_path, 
-            class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
+            class: "nav-link" %>
       <% end %>
     </div>
 
     <button type="button"
-            class="mobile-menu-button rounded-lg border border-indigo-500/30 bg-indigo-500/10 text-[#F1F5F9] transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70"
+            class="mobile-menu-button rounded-lg border border-electric/30 bg-electric/10 text-soft-white transition duration-200 hover:bg-electric/20 focus:outline-none focus:ring-2 focus:ring-electric/70"
             aria-label="Abrir menu de navegação"
             aria-controls="mobile-menu-panel"
             aria-expanded="false"
@@ -173,17 +260,17 @@
        data-action="click->mobile-menu#close"></div>
 
   <aside id="mobile-menu-panel"
-         class="mobile-menu-panel border-l border-slate-700 bg-[#1E293B] px-6 py-5 shadow-2xl shadow-black/40"
+         class="mobile-menu-panel border-l border-slate-700 bg-slate px-6 py-5 shadow-2xl shadow-black/40"
          data-mobile-menu-target="panel"
          aria-label="Menu de navegação mobile"
          aria-hidden="true">
     <div class="flex items-center justify-between border-b border-slate-700 pb-4">
-      <span class="text-lg font-bold font-['Space_Grotesk'] text-[#F1F5F9]">
+      <span class="text-lg font-bold text-soft-white font-title">
         Palermo<span class="text-indigo-500">.dev</span>
       </span>
 
       <button type="button"
-              class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-600 text-[#F1F5F9] transition duration-200 hover:border-indigo-500 hover:text-indigo-400 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-600 text-soft-white transition duration-200 hover:border-electric hover:text-electric focus:outline-none focus:ring-2 focus:ring-electric/70"
               aria-label="Fechar menu de navegação"
               data-action="mobile-menu#close">
         <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -194,36 +281,36 @@
 
     <div class="mt-6 flex flex-col gap-3 text-sm font-medium">
       <%= link_to "Início", root_path(anchor: "hero"),
-          class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+          class: "mobile-nav-link",
           data: { action: "mobile-menu#close" } %>
 
       <%= link_to "Sobre", root_path(anchor: "sobre"),
-          class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+          class: "mobile-nav-link",
           data: { action: "mobile-menu#close" } %>
 
       <%= link_to "Projetos", root_path(anchor: "projetos"),
-          class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+          class: "mobile-nav-link",
           data: { action: "mobile-menu#close" } %>
 
       <%= link_to "Contato", root_path(anchor: "contato"),
-          class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+          class: "mobile-nav-link",
           data: { action: "mobile-menu#close" } %>
 
       <% if user_signed_in? %>
         <%= link_to "Dashboard",
             dashboard_path,
-            class: "rounded-lg border border-[#10B981]/30 bg-[#10B981]/10 px-4 py-3 text-[#10B981] transition duration-200 hover:bg-[#10B981]/20 focus:outline-none focus:ring-2 focus:ring-[#10B981]/60",
+            class: "mobile-nav-link-success",
             data: { action: "mobile-menu#close" } %>
 
         <%= button_to "Sair",
             destroy_user_session_path,
             method: :delete,
             form_class: "mt-1",
-            class: "w-full rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-left text-sm font-medium text-red-300 transition duration-200 hover:bg-red-500/20 focus:outline-none focus:ring-2 focus:ring-red-500/60" %>
+            class: "mobile-nav-button-danger" %>
       <% else %>
         <%= link_to "Entrar",
             new_user_session_path,
-            class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+            class: "mobile-nav-link",
             data: { action: "mobile-menu#close" } %>
       <% end %>
     </div>
@@ -235,7 +322,7 @@
       <%= yield %>
     </main>
 
-    <footer class="bg-[#1E293B] border-t border-slate-700 py-6 text-center text-[#94A3B8]">
+    <footer class="border-t border-slate-700 bg-slate py-6 text-center text-muted">
       © <%= Date.current.year %> Pedro Palermo
     </footer>
 

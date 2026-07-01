@@ -1,9 +1,9 @@
 <% if page.current? %>
   <li>
-    <%= content_tag :a, page, data: { remote: remote }, rel: page.rel, class: 'px-3 py-2 bg-electric text-soft-white rounded font-semibold text-sm' %>
+    <%= content_tag :a, page, data: { remote: remote }, rel: page.rel, class: 'pagination-current' %>
   </li>
 <% else %>
   <li>
-    <%= link_to page, url, remote: remote, rel: page.rel, class: 'px-3 py-2 bg-slate text-soft-white rounded hover:bg-electric transition-colors text-sm' %>
+    <%= link_to page, url, remote: remote, rel: page.rel, class: 'pagination-link' %>
   </li>
 <% end %>

@@ -1,7 +1,7 @@
-<div class="min-h-screen bg-midnight px-4 py-8 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-[96rem]">
+<div class="page-shell">
+  <div class="content-container-wide">
     <div class="mb-10">
-      <h1 class="text-3xl font-bold text-soft-white font-title mb-2">
+      <h1 class="section-title mb-2">
         Dashboard
       </h1>
       <p class="text-muted">
@@ -10,11 +10,11 @@
     </div>
 
     <!-- Passo 10: tabela à esquerda, gráficos à direita, Brasileirão embaixo -->
-    <div class="grid grid-cols-1 gap-10 xl:grid-cols-5 xl:items-start">
+    <div class="dashboard-grid">
       <section class="xl:col-span-3">
-        <div class="bg-slate rounded-xl p-6 lg:p-8">
+        <div class="dashboard-card">
           <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <h2 class="text-xl font-bold text-soft-white font-title">
+            <h2 class="panel-title">
               Usuários Cadastrados
             </h2>
             <p class="text-muted text-sm">
@@ -22,32 +22,32 @@
             </p>
           </div>
 
-          <div class="overflow-x-auto rounded-xl border border-midnight/30">
-            <table class="w-full min-w-[44rem] text-sm">
+          <div class="dashboard-table-wrap">
+            <table class="dashboard-table min-w-[44rem]">
               <thead>
-                <tr class="border-b border-[#0F172A] bg-[#1E293B]">
-                  <th class="text-left py-4 px-5 text-muted font-semibold">Nome</th>
-                  <th class="text-left py-4 px-5 text-muted font-semibold">Time</th>
-                  <th class="text-left py-4 px-5 text-muted font-semibold">Idade</th>
-                  <th class="text-left py-4 px-5 text-muted font-semibold">Cadastro</th>
+                <tr class="dashboard-table-head">
+                  <th class="dashboard-th">Nome</th>
+                  <th class="dashboard-th">Time</th>
+                  <th class="dashboard-th">Idade</th>
+                  <th class="dashboard-th">Cadastro</th>
                 </tr>
               </thead>
               <tbody>
                 <% @recent_users.each do |user| %>
-                  <tr class="border-b border-midnight/20 hover:bg-midnight/20 transition-colors">
-                    <td class="py-4 px-5 text-soft-white">
+                  <tr class="dashboard-row">
+                    <td class="dashboard-td">
                       <div class="flex items-center gap-2">
                         <%= user.name %>
                         <% if user == current_user %>
-                          <span class="inline-flex items-center rounded-full bg-success/20 px-2 py-1 text-xs font-medium text-success">
+                          <span class="badge-success">
                             você
                           </span>
                         <% end %>
                       </div>
                     </td>
-                    <td class="py-4 px-5 text-soft-white"><%= user.club %></td>
-                    <td class="py-4 px-5 text-soft-white"><%= user.age %> anos</td>
-                    <td class="py-4 px-5 text-muted">
+                    <td class="dashboard-td"><%= user.club %></td>
+                    <td class="dashboard-td"><%= user.age %> anos</td>
+                    <td class="dashboard-td-muted">
                       <%= user.created_at.strftime("%d/%m/%Y") %>
                     </td>
                   </tr>
@@ -69,8 +69,8 @@
       </section>
 
       <section class="flex flex-col gap-10 xl:col-span-2">
-        <div class="bg-slate rounded-xl p-6 lg:p-8">
-          <h2 class="text-xl font-bold text-soft-white font-title mb-6">
+        <div class="dashboard-card">
+          <h2 class="panel-title mb-6">
             Distribuição de Times
           </h2>
           <div class="h-96">
@@ -87,8 +87,8 @@
           </div>
         </div>
 
-        <div class="bg-slate rounded-xl p-6 lg:p-8">
-          <h2 class="text-xl font-bold text-soft-white font-title mb-6">
+        <div class="dashboard-card">
+          <h2 class="panel-title mb-6">
             Faixa Etária
           </h2>
           <div class="h-96">
@@ -112,15 +112,15 @@
       </section>
     </div>
 
-    <section class="mt-12 bg-slate rounded-xl p-6 lg:p-8">
+    <section class="dashboard-card mt-12">
       <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <h2 class="text-xl font-bold text-soft-white font-title">
+          <h2 class="panel-title">
             Brasileirão 2026 — Classificação
           </h2>
         </div>
 
-        <div class="w-full rounded-xl border border-electric/40 bg-midnight/40 px-5 py-4 md:w-auto md:min-w-80">
+        <div class="w-full rounded-lg border border-electric/40 bg-midnight/40 px-5 py-4 md:w-auto md:min-w-80">
           <p class="text-xs font-semibold uppercase tracking-widest text-muted">
             Time do usuário
           </p>
@@ -139,47 +139,47 @@
         </div>
       </div>
 
-      <div class="max-h-[44rem] overflow-auto rounded-xl border border-midnight/30">
-        <table class="w-full min-w-[64rem] text-sm">
-          <thead class="sticky top-0 z-10 bg-[#1E293B]">
-            <tr class="border-b border-[#0F172A] bg-[#1E293B]">
-              <th class="text-left py-4 px-5 text-muted font-semibold">Pos.</th>
-              <th class="text-left py-4 px-5 text-muted font-semibold">Time</th>
-              <th class="text-center py-4 px-5 text-muted font-semibold">Jogos</th>
-              <th class="text-center py-4 px-5 text-muted font-semibold">Vitórias</th>
-              <th class="text-center py-4 px-5 text-muted font-semibold">Empates</th>
-              <th class="text-center py-4 px-5 text-muted font-semibold">Derrotas</th>
-              <th class="text-center py-4 px-5 text-muted font-semibold">Gols</th>
-              <th class="text-center py-4 px-5 text-muted font-semibold">Pontos</th>
+      <div class="max-h-[44rem] overflow-auto rounded-lg border border-midnight/30">
+        <table class="dashboard-table min-w-[64rem]">
+          <thead class="sticky top-0 z-10 bg-slate">
+            <tr class="dashboard-table-head">
+              <th class="dashboard-th">Pos.</th>
+              <th class="dashboard-th">Time</th>
+              <th class="dashboard-th-center">Jogos</th>
+              <th class="dashboard-th-center">Vitórias</th>
+              <th class="dashboard-th-center">Empates</th>
+              <th class="dashboard-th-center">Derrotas</th>
+              <th class="dashboard-th-center">Gols</th>
+              <th class="dashboard-th-center">Pontos</th>
             </tr>
           </thead>
           <tbody>
             <% @standings.each do |team| %>
               <% user_team = team[:team_name] == current_user.club %>
               <tr class="border-b border-midnight/20 transition-colors <%= user_team ? 'bg-electric/10 hover:bg-electric/20' : 'hover:bg-midnight/20' %>">
-                <td class="py-4 px-5 text-soft-white font-semibold">
+                <td class="dashboard-td font-semibold">
                   <% if team[:position] <= 4 %>
-                    <span class="inline-flex items-center rounded-full bg-electric/20 px-2 py-1 text-xs font-medium text-electric">
+                    <span class="badge-electric">
                       <%= team[:position] %>
                     </span>
                   <% elsif team[:position] <= 6 %>
-                    <span class="inline-flex items-center rounded-full bg-soft-white/10 px-2 py-1 text-xs font-medium text-soft-white">
+                    <span class="badge-soft">
                       <%= team[:position] %>
                     </span>
                   <% else %>
                     <%= team[:position] %>
                   <% end %>
                 </td>
-                <td class="py-4 px-5 text-soft-white">
+                <td class="dashboard-td">
                   <div class="flex items-center gap-2">
                     <strong><%= team[:team_name] %></strong>
                   </div>
                 </td>
-                <td class="py-4 px-5 text-center text-muted"><%= team[:played] %></td>
-                <td class="py-4 px-5 text-center text-success"><%= team[:wins] %></td>
-                <td class="py-4 px-5 text-center text-muted"><%= team[:draws] %></td>
-                <td class="py-4 px-5 text-center text-red-400"><%= team[:losses] %></td>
-                <td class="py-4 px-5 text-center text-muted">
+                <td class="dashboard-td-center"><%= team[:played] %></td>
+                <td class="px-5 py-4 text-center text-success"><%= team[:wins] %></td>
+                <td class="dashboard-td-center"><%= team[:draws] %></td>
+                <td class="px-5 py-4 text-center text-red-400"><%= team[:losses] %></td>
+                <td class="dashboard-td-center">
                   <% if team[:goal_diff] > 0 %>
                     <span class="text-success">+<%= team[:goal_diff] %></span>
                   <% elsif team[:goal_diff] < 0 %>
@@ -188,7 +188,7 @@
                     <span class="text-muted">=<%= team[:goal_diff] %></span>
                   <% end %>
                 </td>
-                <td class="py-4 px-5 text-center">
+                <td class="px-5 py-4 text-center">
                   <span class="inline-flex items-center rounded-full bg-electric/20 px-3 py-1 font-bold text-electric">
                     <%= team[:points] %>
                   </span>
