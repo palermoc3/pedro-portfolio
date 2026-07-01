@@ -26,13 +26,100 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Chartkick JS -->
     <script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.0"></script>
+
+    <style>
+      .desktop-navigation {
+        display: none;
+      }
+
+      .mobile-menu-button {
+        display: inline-flex;
+        height: 2.75rem;
+        width: 2.75rem;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mobile-menu-icon {
+        display: flex;
+        flex-direction: column;
+        gap: 0.375rem;
+      }
+
+      .mobile-menu-line {
+        display: block;
+        height: 0.125rem;
+        width: 1.5rem;
+        border-radius: 9999px;
+        background-color: currentColor;
+        transition: opacity 200ms ease, transform 200ms ease;
+      }
+
+      .mobile-menu-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: none;
+        background-color: rgb(15 23 42 / 0.7);
+        opacity: 0;
+        backdrop-filter: blur(8px);
+        transition: opacity 300ms ease;
+      }
+
+      .mobile-menu-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 50;
+        display: flex;
+        height: 100dvh;
+        width: 18rem;
+        max-width: 85vw;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform 300ms ease;
+      }
+
+      .site-header.is-open .mobile-menu-overlay {
+        display: block;
+        opacity: 1;
+      }
+
+      .site-header.is-open .mobile-menu-panel {
+        transform: translateX(0);
+      }
+
+      .site-header.is-open .mobile-menu-line:first-child {
+        transform: translateY(0.5rem) rotate(45deg);
+      }
+
+      .site-header.is-open .mobile-menu-line:nth-child(2) {
+        opacity: 0;
+      }
+
+      .site-header.is-open .mobile-menu-line:last-child {
+        transform: translateY(-0.5rem) rotate(-45deg);
+      }
+
+      @media (min-width: 768px) {
+        .desktop-navigation {
+          display: flex;
+        }
+
+        .mobile-menu-button,
+        .mobile-menu-overlay,
+        .mobile-menu-panel {
+          display: none;
+        }
+      }
+    </style>
   </head>
 
   <!-- O segredo está aqui: adicionamos flex, flex-col e min-h-screen no body -->
   <body class="bg-[#0F172A] text-[#F1F5F9] flex flex-col min-h-screen" style="font-family: 'Inter', sans-serif;">
 
 <!-- Navbar Fixa/Sticky -->
-<nav class="sticky top-0 z-50 bg-[#0F172A]/80 backdrop-blur-md border-b border-slate-800 px-6 py-4">
+<nav class="site-header sticky top-0 z-50 bg-[#0F172A]/80 backdrop-blur-md border-b border-slate-800 px-6 py-4" data-controller="mobile-menu" data-action="keydown.esc@window->mobile-menu#close">
   <div class="max-w-6xl mx-auto flex justify-between items-center">
     <!-- Logo / Nome -->
     <a href="#" class="text-xl font-bold font-['Space_Grotesk'] text-[#F1F5F9]">
@@ -40,8 +127,8 @@
     </a>
 
     <!-- Links de Navegação e Ações -->
-    <div class="flex space-x-6 text-sm font-medium text-[#94A3B8] items-center">
-<%= link_to "Início", root_path(anchor: "Hero"),
+    <div class="desktop-navigation space-x-6 text-sm font-medium text-[#94A3B8] items-center">
+<%= link_to "Início", root_path(anchor: "hero"),
     class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
     
     <%= link_to "Sobre", root_path(anchor: "sobre"),
@@ -65,7 +152,82 @@
             class: "text-indigo-400 hover:text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 px-4 py-2 rounded-lg border border-indigo-500/20 transition-colors text-sm font-medium text-center inline-block" %>
       <% end %>
     </div>
+
+    <button type="button"
+            class="mobile-menu-button rounded-lg border border-indigo-500/30 bg-indigo-500/10 text-[#F1F5F9] transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70"
+            aria-label="Abrir menu de navegação"
+            aria-controls="mobile-menu-panel"
+            aria-expanded="false"
+            data-mobile-menu-target="button"
+            data-action="mobile-menu#toggle">
+      <span class="mobile-menu-icon" aria-hidden="true">
+        <span class="mobile-menu-line" data-mobile-menu-target="lineTop"></span>
+        <span class="mobile-menu-line" data-mobile-menu-target="lineMiddle"></span>
+        <span class="mobile-menu-line" data-mobile-menu-target="lineBottom"></span>
+      </span>
+    </button>
   </div>
+
+  <div class="mobile-menu-overlay"
+       data-mobile-menu-target="overlay"
+       data-action="click->mobile-menu#close"></div>
+
+  <aside id="mobile-menu-panel"
+         class="mobile-menu-panel border-l border-slate-700 bg-[#1E293B] px-6 py-5 shadow-2xl shadow-black/40"
+         data-mobile-menu-target="panel"
+         aria-label="Menu de navegação mobile"
+         aria-hidden="true">
+    <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+      <span class="text-lg font-bold font-['Space_Grotesk'] text-[#F1F5F9]">
+        Palermo<span class="text-indigo-500">.dev</span>
+      </span>
+
+      <button type="button"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-600 text-[#F1F5F9] transition duration-200 hover:border-indigo-500 hover:text-indigo-400 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70"
+              aria-label="Fechar menu de navegação"
+              data-action="mobile-menu#close">
+        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="mt-6 flex flex-col gap-3 text-sm font-medium">
+      <%= link_to "Início", root_path(anchor: "hero"),
+          class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+          data: { action: "mobile-menu#close" } %>
+
+      <%= link_to "Sobre", root_path(anchor: "sobre"),
+          class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+          data: { action: "mobile-menu#close" } %>
+
+      <%= link_to "Projetos", root_path(anchor: "projetos"),
+          class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+          data: { action: "mobile-menu#close" } %>
+
+      <%= link_to "Contato", root_path(anchor: "contato"),
+          class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+          data: { action: "mobile-menu#close" } %>
+
+      <% if user_signed_in? %>
+        <%= link_to "Dashboard",
+            dashboard_path,
+            class: "rounded-lg border border-[#10B981]/30 bg-[#10B981]/10 px-4 py-3 text-[#10B981] transition duration-200 hover:bg-[#10B981]/20 focus:outline-none focus:ring-2 focus:ring-[#10B981]/60",
+            data: { action: "mobile-menu#close" } %>
+
+        <%= button_to "Sair",
+            destroy_user_session_path,
+            method: :delete,
+            form_class: "mt-1",
+            class: "w-full rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-left text-sm font-medium text-red-300 transition duration-200 hover:bg-red-500/20 focus:outline-none focus:ring-2 focus:ring-red-500/60" %>
+      <% else %>
+        <%= link_to "Entrar",
+            new_user_session_path,
+            class: "rounded-lg border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-indigo-300 transition duration-200 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-[#6366F1]/70",
+            data: { action: "mobile-menu#close" } %>
+      <% end %>
+    </div>
+  </aside>
 </nav>
 
     <!-- Envelopamos o yield em uma tag main com flex-grow para empurrar o footer -->
@@ -76,5 +238,51 @@
     <footer class="bg-[#1E293B] border-t border-slate-700 py-6 text-center text-[#94A3B8]">
       © <%= Date.current.year %> Pedro Palermo
     </footer>
+
+    <script>
+      (() => {
+        const setupMobileMenuFallback = () => {
+          const header = document.querySelector(".site-header")
+          if (!header || header.dataset.mobileMenuReady === "true" || header.dataset.mobileMenuFallback === "true") return
+
+          const button = header.querySelector(".mobile-menu-button")
+          const panel = header.querySelector(".mobile-menu-panel")
+          const overlay = header.querySelector(".mobile-menu-overlay")
+          const closeButtons = header.querySelectorAll("[data-action*='mobile-menu#close']")
+          if (!button || !panel || !overlay) return
+
+          header.dataset.mobileMenuFallback = "true"
+
+          const open = () => {
+            header.classList.add("is-open")
+            button.setAttribute("aria-expanded", "true")
+            button.setAttribute("aria-label", "Fechar menu de navegação")
+            panel.setAttribute("aria-hidden", "false")
+            document.body.classList.add("overflow-hidden")
+          }
+
+          const close = () => {
+            header.classList.remove("is-open")
+            button.setAttribute("aria-expanded", "false")
+            button.setAttribute("aria-label", "Abrir menu de navegação")
+            panel.setAttribute("aria-hidden", "true")
+            document.body.classList.remove("overflow-hidden")
+          }
+
+          button.addEventListener("click", () => {
+            header.classList.contains("is-open") ? close() : open()
+          })
+
+          overlay.addEventListener("click", close)
+          closeButtons.forEach((element) => element.addEventListener("click", close))
+          document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") close()
+          })
+        }
+
+        document.addEventListener("turbo:load", () => window.setTimeout(setupMobileMenuFallback, 150))
+        document.addEventListener("DOMContentLoaded", () => window.setTimeout(setupMobileMenuFallback, 150))
+      })()
+    </script>
   </body>
 </html>
