@@ -1,0 +1,90 @@
+<%
+  navigation_items = [
+    ["Início", root_path(anchor: "hero"), "mobile-nav-link"],
+    ["Sobre", root_path(anchor: "sobre"), "mobile-nav-link"],
+    ["Projetos", root_path(anchor: "projetos"), "mobile-nav-link"],
+    ["Dashboard", dashboard_path, "mobile-nav-link-success"],
+    ["Contato", root_path(anchor: "contato"), "mobile-nav-link"]
+  ]
+%>
+
+<header class="site-header sticky top-0 z-50 border-b border-slate-800 bg-midnight/80 px-6 py-4 backdrop-blur-md"
+        data-controller="mobile-menu"
+        data-action="keydown.esc@window->mobile-menu#close">
+  <div class="content-container flex items-center justify-between">
+    <%= link_to root_path(anchor: "hero"), class: "inline-flex items-center gap-3 text-xl font-bold text-soft-white font-title" do %>
+      <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-electric/30 bg-electric/10 text-success" aria-hidden="true">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none">
+          <path d="M5 19V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M5 19H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M8 16L11.5 12.5L14 15L19 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 19V14M12 19V11M16 19V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="flex flex-col">
+        <span>Pedro Palermo</span>
+        <span class="text-xs font-semibold uppercase tracking-widest text-muted">Rails Analytics</span>
+      </span>
+    <% end %>
+
+    <nav class="desktop-navigation items-center space-x-6 text-sm font-medium text-muted" aria-label="Navegação principal">
+      <% navigation_items.each do |label, path, _mobile_class| %>
+        <%= link_to label, path, class: "nav-link" %>
+      <% end %>
+    </nav>
+
+    <button type="button"
+            class="mobile-menu-button rounded-lg border border-electric/30 bg-electric/10 text-soft-white transition duration-200 hover:bg-electric/20 focus:outline-none focus:ring-2 focus:ring-electric/70"
+            aria-label="Abrir menu de navegação"
+            aria-controls="mobile-menu-panel"
+            aria-expanded="false"
+            data-mobile-menu-target="button"
+            data-action="mobile-menu#toggle">
+      <span class="mobile-menu-icon" aria-hidden="true">
+        <span class="mobile-menu-line"></span>
+        <span class="mobile-menu-line"></span>
+        <span class="mobile-menu-line"></span>
+      </span>
+    </button>
+  </div>
+
+  <div class="mobile-menu-overlay" data-action="click->mobile-menu#close"></div>
+
+  <aside id="mobile-menu-panel"
+         class="mobile-menu-panel border-l border-slate-700 bg-slate px-6 py-5 shadow-2xl shadow-black/40"
+         data-mobile-menu-target="panel"
+         aria-label="Menu de navegação mobile"
+         aria-hidden="true">
+    <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+      <span class="inline-flex items-center gap-3 text-lg font-bold text-soft-white font-title">
+        <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-electric/30 bg-electric/10 text-success" aria-hidden="true">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none">
+            <path d="M5 19V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M5 19H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M8 16L11.5 12.5L14 15L19 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 19V14M12 19V11M16 19V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="flex flex-col">
+          <span>Pedro Palermo</span>
+          <span class="text-xs font-semibold uppercase tracking-widest text-muted">Rails Analytics</span>
+        </span>
+      </span>
+
+      <button type="button"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-600 text-soft-white transition duration-200 hover:border-electric hover:text-electric focus:outline-none focus:ring-2 focus:ring-electric/70"
+              aria-label="Fechar menu de navegação"
+              data-action="mobile-menu#close">
+        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="mt-6 flex flex-col gap-3 text-sm font-medium" aria-label="Navegação mobile">
+      <% navigation_items.each do |label, path, mobile_class| %>
+        <%= link_to label, path, class: mobile_class, data: { action: "mobile-menu#close" } %>
+      <% end %>
+    </nav>
+  </aside>
+</header>
