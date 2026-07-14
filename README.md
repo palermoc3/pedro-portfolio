@@ -30,6 +30,14 @@ bin/rails db:create db:migrate db:seed
 bin/rails server
 ```
 
+Para alterar estilos Tailwind em desenvolvimento, rode o watcher em outro terminal:
+
+```bash
+bin/rails tailwindcss:watch
+```
+
+Ou use `bin/dev` para iniciar Rails e Tailwind juntos.
+
 URLs úteis:
 
 - Home: `http://localhost:3000/`
