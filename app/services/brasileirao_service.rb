@@ -1,11 +1,10 @@
-class BrasileiraoService
-  include HTTParty
+require "net/http"
+require "json"
 
+class BrasileiraoService
   BASE_URI = "https://v3.football.api-sports.io"
   LEAGUE_ID = 71
   SEASON = 2026
-
-  base_uri BASE_URI
 
   def initialize(api_key: ENV["API_FOOTBALL_KEY"])
     @api_key = api_key
@@ -28,20 +27,18 @@ class BrasileiraoService
   private
 
   def apifootball_standings
-    response = self.class.get(
-      "/standings",
-      query: {
-        league: LEAGUE_ID,
-        season: SEASON
-      },
-      headers: {
-        "x-apisports-key" => @api_key
-      },
-      timeout: 5
-    )
+    uri = URI("#{BASE_URI}/standings")
+    uri.query = URI.encode_www_form(league: LEAGUE_ID, season: SEASON)
 
-    if response.success?
-      parse_football(response.parsed_response)
+    request = Net::HTTP::Get.new(uri)
+    request["x-apisports-key"] = @api_key
+
+    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, read_timeout: 5, open_timeout: 5) do |http|
+      http.request(request)
+    end
+
+    if response.is_a?(Net::HTTPSuccess)
+      parse_football(JSON.parse(response.body))
     else
       Rails.logger.warn("BrasileiraoService API-Football failed: #{response.code} #{response.message}")
       fallback_data
