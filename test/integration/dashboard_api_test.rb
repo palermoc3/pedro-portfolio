@@ -9,7 +9,7 @@ class DashboardApiTest < ActionDispatch::IntegrationTest
     payload = JSON.parse(response.body)
     assert_includes payload.keys, "receita"
     assert_includes payload.keys, "sales"
-    assert_equal ["Jul 2024", "Jan 2025", "Jul 2025", "Jan 2026", "Jul 2026"], payload["sales"]["months"]
+    assert_equal [ "Jul 2024", "Jan 2025", "Jul 2025", "Jan 2026", "Jul 2026" ], payload["sales"]["months"]
   end
 
   test "serves paginated customers payload for Kaminari consumption" do

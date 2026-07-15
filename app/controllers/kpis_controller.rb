@@ -1,5 +1,4 @@
 class KpisController < ApplicationController
-
   def show
     payload = {
       receita: {
@@ -25,8 +24,8 @@ class KpisController < ApplicationController
         cart_value: 1450
       },
       sales: {
-        months: ["Jul 2024", "Jan 2025", "Jul 2025", "Jan 2026", "Jul 2026"],
-        values: [6500, 7200, 6880, 7650, 7800]
+        months: [ "Jul 2024", "Jan 2025", "Jul 2025", "Jan 2026", "Jul 2026" ],
+        values: [ 6500, 7200, 6880, 7650, 7800 ]
       }
     }
 

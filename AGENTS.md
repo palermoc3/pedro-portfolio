@@ -30,6 +30,13 @@ This file tells AI coding agents how to be productive in this public Rails portf
 - Security scans: `bin/brakeman`, `bin/bundler-audit`
 - JavaScript dependency audit: `bin/importmap audit`
 
+## GitHub CI Guardrails
+
+- Before pushing changes that touch Ruby, Rails routes, views, or tests, run `bin/rails test`, `bin/rubocop -f github`, and `bin/bundler-audit`.
+- GitHub uses the `-f github` formatter for RuboCop, so local style failures should be fixed before commit even when tests are green.
+- If `bin/bundler-audit` fails, prefer updating the affected transitive gems in `Gemfile.lock` with `bundle update <gem> --patch` instead of adding broad ignores.
+- Known security scan remediations already applied: `concurrent-ruby >= 1.3.7`, `crass >= 1.0.7`, `nokogiri >= 1.19.4`, and `websocket-driver >= 0.8.2`.
+
 ## Visual CSS Checks
 
 - When changing layout, dashboard, or Tailwind styles, validate the page visually with Chromium/Selenium when possible.
