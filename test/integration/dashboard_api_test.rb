@@ -37,6 +37,34 @@ class DashboardApiTest < ActionDispatch::IntegrationTest
     assert_equal expected_customer_keys.sort, customers.first.keys.sort
   end
 
+  test "serves predictive model payload from dashboard data" do
+    get "/api/predictions"
+
+    assert_response :success
+
+    payload = JSON.parse(response.body)
+
+    assert_equal "predictive_dashboard", payload.fetch("resource")
+    assert_equal "/api/customers", payload.dig("generated_from", "api")
+    assert_equal "public/customers_kaminari.json", payload.dig("generated_from", "payload")
+    assert_equal 3, payload.fetch("orchestration_cycle").length
+    assert_equal 4, payload.fetch("model_cards").length
+
+    revenue_forecast = payload.dig("forecast", "revenue")
+    assert_equal "revenue", revenue_forecast.fetch("target")
+    assert_equal 24, revenue_forecast.fetch("training_points")
+    assert_equal 6, revenue_forecast.fetch("forecast").length
+    assert_includes revenue_forecast.fetch("metrics").keys, "mape_percent"
+
+    assert payload.dig("forecast", "next_90_days_revenue").positive?
+    assert_equal 8, payload.dig("customer_propensity", "top_opportunities").length
+    assert_equal 8, payload.dig("customer_propensity", "city_opportunities").length
+    assert_equal 8, payload.dig("customer_propensity", "retention_watchlist").length
+    assert_equal 8, payload.dig("cart_recovery", "candidates").length
+    assert_equal 6, payload.dig("cart_recovery", "product_type_focus").length
+    assert payload.dig("cart_recovery", "expected_recovered_revenue").positive?
+  end
+
   test "serves customers with custom per page using Kaminari" do
     get "/api/customers", params: { page: 2, per_page: 50 }
 
@@ -113,6 +141,27 @@ class DashboardApiTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "Usuários Cadastrados"
     refute_includes response.body, "Classificação"
     refute_includes response.body, "Time do usuário"
+    refute_includes response.body, "Entrar"
+    refute_includes response.body, "Sair"
+    refute_includes response.body, "login"
+  end
+
+  test "predictive dashboard renders model integration without login" do
+    get "/dashboards/previsoes"
+
+    assert_response :success
+    assert_select "h1", text: "Modelos de previsão da loja"
+    assert_select "h2", text: "Como a plataforma conversa com os dados"
+    assert_select "[data-predictions-dashboard]", 1
+    assert_select "[data-predictions-url='/api/predictions']", 1
+    assert_select "#prediction-forecast-chart", 1
+    assert_select ".prediction-model-card", 4
+    assert_select ".prediction-api-loader", 1
+    assert_includes response.body, "Forecast de receita"
+    assert_includes response.body, "Cidades com maior propensão"
+    assert_includes response.body, "Watchlist de churn"
+    assert_includes response.body, "Tipos de produto em aberto"
+    assert_includes response.body, "initPredictionsDashboard"
     refute_includes response.body, "Entrar"
     refute_includes response.body, "Sair"
     refute_includes response.body, "login"

@@ -1,0 +1,421 @@
+<% content_for :title, "Previsões de Dados | Pedro Palermo" %>
+
+<div class="page-shell">
+  <div class="content-container-wide predictive-dashboard">
+    <header class="store-dashboard-header">
+      <div>
+        <p class="mb-2 text-xs font-semibold uppercase tracking-widest text-success">
+          Data Science
+        </p>
+        <h1 class="section-title mb-2">
+          Modelos de previsão da loja
+        </h1>
+        <p class="max-w-3xl text-muted">
+          Página pública de portfólio para demonstrar como dados de API viram modelos de previsão, scores de clientes e priorização operacional em Rails.
+        </p>
+      </div>
+
+      <div class="prediction-status-panel">
+        <div class="prediction-status-content">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-widest text-muted">API conectada</p>
+            <p class="mt-2 text-sm text-soft-white">Predições da loja</p>
+            <p class="mt-1 text-xs text-muted" data-prediction-status>Carregando API</p>
+          </div>
+          <div class="prediction-api-loader" aria-hidden="true">
+            <% 16.times do %>
+              <span class="prediction-api-dot"></span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main data-predictions-dashboard data-predictions-url="<%= api_predictions_path %>">
+      <section class="prediction-model-grid mb-6" data-model-cards>
+        <% [
+          ["Forecast de receita mensal", "Regressão temporal"],
+          ["Propensão de recompra", "Score RFV"],
+          ["Risco de churn", "Retenção"],
+          ["Recuperação de carrinhos", "Receita esperada"]
+        ].each do |name, kind| %>
+          <article class="prediction-model-card">
+            <span class="store-kpi-card-accent mb-4"></span>
+            <p class="text-sm font-semibold text-soft-white"><%= name %></p>
+            <p class="mt-1 text-xs uppercase tracking-widest text-muted"><%= kind %></p>
+            <p class="prediction-model-value mt-5 text-2xl font-bold text-soft-white">—</p>
+            <p class="prediction-model-action mt-3 text-sm leading-6 text-muted">Aguardando API.</p>
+            <div class="prediction-value-summary mt-5">
+              <p class="prediction-value-summary-label">Leitura simples</p>
+              <p class="prediction-model-summary mt-2 text-sm leading-6 text-muted">Quando o modelo carregar, este bloco traduz o número em uma decisão prática.</p>
+            </div>
+          </article>
+        <% end %>
+      </section>
+
+      <section class="prediction-main-grid mb-6">
+        <article class="store-panel">
+          <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 class="panel-title">
+                Forecast de receita
+              </h2>
+              <p class="text-sm text-muted">
+                Próximos 6 meses com limite inferior e superior.
+              </p>
+            </div>
+            <span class="w-fit rounded-full border border-success/30 bg-success/10 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-success">
+              OLS
+            </span>
+          </div>
+          <div class="prediction-chart-frame">
+            <div id="prediction-forecast-chart" class="prediction-chart-surface" aria-live="polite"></div>
+          </div>
+          <div class="prediction-value-summary mt-4" data-forecast-summary>
+            <p class="prediction-value-summary-label">O que observar</p>
+            <p class="mt-2 text-sm leading-6 text-muted">
+              O gráfico separa o histórico real da previsão para mostrar se a loja tende a ganhar, manter ou perder fôlego nos próximos meses.
+            </p>
+          </div>
+        </article>
+
+        <aside class="store-panel">
+          <h2 class="panel-title mb-5">
+            Validação do modelo
+          </h2>
+          <dl class="store-operation-list">
+            <% [
+              ["Pontos de treino", "training_points"],
+              ["Tendência mensal", "trend_per_month"],
+              ["MAE", "mae"],
+              ["MAPE", "mape"],
+              ["R²", "r_squared"],
+              ["Receita 90 dias", "next_90_days"]
+            ].each do |label, key| %>
+              <div class="store-operation-row">
+                <dt class="text-sm text-muted"><%= label %></dt>
+                <dd class="shrink-0 text-sm font-semibold text-soft-white" data-forecast-metric="<%= key %>">—</dd>
+              </div>
+            <% end %>
+          </dl>
+          <div class="prediction-value-summary mt-4">
+            <p class="prediction-value-summary-label">Como ler</p>
+            <p class="mt-2 text-sm leading-6 text-muted">
+              Erros menores indicam uma previsão mais confiável; a receita de 90 dias ajuda a transformar o modelo em meta comercial.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="prediction-table-grid mb-6">
+        <article class="store-panel">
+          <h2 class="panel-title mb-4">Cidades com maior propensão</h2>
+          <div class="dashboard-table-wrap">
+            <table class="dashboard-table prediction-table">
+              <thead class="dashboard-table-head">
+                <tr>
+                  <th class="dashboard-th">Cidade</th>
+                  <th class="dashboard-th-center">Score médio</th>
+                  <th class="dashboard-th-center">Valor 90d</th>
+                </tr>
+              </thead>
+              <tbody data-propensity-table></tbody>
+            </table>
+          </div>
+          <div class="prediction-value-summary mt-4">
+            <p class="prediction-value-summary-label">Foco do valor</p>
+            <p class="mt-2 text-sm leading-6 text-muted">
+              Esta lista tira o peso da pessoa individual e mostra praças onde a chance média de recompra e o valor previsto ficam mais fortes.
+            </p>
+          </div>
+        </article>
+
+        <article class="store-panel">
+          <h2 class="panel-title mb-4">Watchlist de churn</h2>
+          <div class="dashboard-table-wrap">
+            <table class="dashboard-table prediction-table">
+              <thead class="dashboard-table-head">
+                <tr>
+                  <th class="dashboard-th">Cliente</th>
+                  <th class="dashboard-th-center">Risco</th>
+                  <th class="dashboard-th-center">Recência</th>
+                </tr>
+              </thead>
+              <tbody data-churn-table></tbody>
+            </table>
+          </div>
+          <div class="prediction-value-summary mt-4">
+            <p class="prediction-value-summary-label">Foco do valor</p>
+            <p class="mt-2 text-sm leading-6 text-muted">
+              O ranking mostra clientes que já geraram valor, mas esfriaram; eles merecem ação de retenção antes de sumirem da base.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <section class="prediction-table-grid">
+        <article class="store-panel">
+          <h2 class="panel-title mb-4">Tipos de produto em aberto</h2>
+          <div class="dashboard-table-wrap">
+            <table class="dashboard-table prediction-table">
+              <thead class="dashboard-table-head">
+                <tr>
+                  <th class="dashboard-th">Tipo</th>
+                  <th class="dashboard-th-center">Unidades</th>
+                  <th class="dashboard-th-center">Valor agregado</th>
+                </tr>
+              </thead>
+              <tbody data-cart-table></tbody>
+            </table>
+          </div>
+          <div class="prediction-value-summary mt-4">
+            <p class="prediction-value-summary-label">Foco do valor</p>
+            <p class="mt-2 text-sm leading-6 text-muted">
+              O foco sai do nome do cliente e vai para categorias com maior valor estimado em aberto, cruzando mix vendido, quantidade e carrinhos ainda não fechados.
+            </p>
+          </div>
+        </article>
+
+        <article class="store-panel">
+          <h2 class="panel-title mb-4">Notas de decisão</h2>
+          <ul class="prediction-note-list" data-decision-notes>
+            <li>Carregando leitura dos modelos.</li>
+          </ul>
+        </article>
+      </section>
+    </main>
+
+    <section class="store-data-note store-data-note-final">
+      <div>
+        <p class="mb-2 text-xs font-semibold uppercase tracking-widest text-success">
+          Leitura para recrutadores
+        </p>
+        <h2 class="panel-title mb-2">
+          Como a plataforma conversa com os dados
+        </h2>
+        <p class="max-w-5xl text-sm leading-6 text-muted">
+          A tela mostra uma aplicação Rails consumindo uma API preditiva e transformando dados em decisões visuais. Hoje a fonte é um payload governado dentro do projeto para manter a demo estável; em um produto real, a mesma estrutura poderia receber uma API externa sem mudar a experiência do recrutador ou do usuário final.
+        </p>
+      </div>
+
+      <div class="prediction-agent-grid">
+        <% [
+          ["Plataforma", "Rails entrega a página, consulta a API de previsões e mantém a navegação pública para avaliação rápida."],
+          ["Dados", "A base sintética vira forecast, cidades prioritárias, risco de retenção e foco por categoria de produto."],
+          ["Produto", "A interface traduz números em leitura comercial simples, para quem quer entender valor sem abrir planilha ou código."]
+        ].each do |label, text| %>
+          <article class="store-data-pill">
+            <p class="mb-2 text-xs font-semibold uppercase tracking-widest text-success"><%= label %></p>
+            <p class="text-sm leading-6 text-muted"><%= text %></p>
+          </article>
+        <% end %>
+      </div>
+    </section>
+
+    <script>
+      window.initPredictionsDashboard = function initPredictionsDashboard() {
+        const container = document.querySelector('[data-predictions-dashboard]');
+        if (!container || container.dataset.loading === 'true') return;
+
+        container.dataset.loading = 'true';
+
+        const statusElement = document.querySelector('[data-prediction-status]');
+        const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+        const compactNumber = new Intl.NumberFormat('pt-BR', {
+          notation: 'compact',
+          maximumFractionDigits: 1
+        });
+        const integer = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
+
+        const setStatus = (message) => {
+          if (statusElement) statusElement.textContent = message;
+        };
+
+        const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[char]));
+
+        const categoryLabel = (category) => ({
+          alimentos: 'Alimentos',
+          beleza: 'Beleza',
+          casa: 'Casa',
+          eletronicos: 'Eletrônicos',
+          papelaria: 'Papelaria',
+          vestuario: 'Vestuário'
+        }[category] || String(category));
+
+        const metricValue = (card) => {
+          if (card.metric === 'MAPE') return `${Number(card.score).toFixed(2)}%`;
+          if (card.metric === 'Receita esperada') return currency.format(card.score);
+          return integer.format(card.score);
+        };
+
+        const renderModelCards = (cards) => {
+          document.querySelectorAll('.prediction-model-card').forEach((element, index) => {
+            const card = cards[index];
+            if (!card) return;
+
+            element.querySelector('.prediction-model-value').textContent = metricValue(card);
+            element.querySelector('.prediction-model-action').textContent = card.business_action;
+            element.querySelector('.prediction-model-summary').textContent = card.value_summary || valueSummary(card);
+          });
+        };
+
+        const valueSummary = (card) => {
+          const summaries = {
+            'revenue': 'Mostra o quanto a previsão erra em média. Quanto menor o percentual, mais segurança para planejar estoque, meta e caixa.',
+            'repeat_purchase_probability': 'Mostra quantas cidades foram ranqueadas para campanhas, usando chance média de recompra e valor previsto.',
+            'churn_risk': 'Mostra onde existe risco de perder relacionamento e receita já conquistada, antes que a queda apareça no faturamento.',
+            'expected_recovered_revenue': 'Mostra quanto valor está em aberto por tipo de produto, ajudando a escolher onde agir primeiro.'
+          };
+
+          return summaries[card.target] || 'Traduz o modelo em uma prioridade clara para decisão comercial.';
+        };
+
+        const renderForecastMetrics = (data) => {
+          const revenue = data.forecast.revenue;
+          const metrics = revenue.metrics;
+          const values = {
+            training_points: revenue.training_points,
+            trend_per_month: currency.format(revenue.trend_per_month),
+            mae: currency.format(metrics.mae),
+            mape: `${Number(metrics.mape_percent).toFixed(2)}%`,
+            r_squared: Number(metrics.r_squared).toFixed(3),
+            next_90_days: currency.format(data.forecast.next_90_days_revenue)
+          };
+
+          document.querySelectorAll('[data-forecast-metric]').forEach((element) => {
+            element.textContent = values[element.dataset.forecastMetric] || '—';
+          });
+
+          const summary = document.querySelector('[data-forecast-summary] p:last-child');
+          if (summary) {
+            summary.textContent = `A previsão projeta ${currency.format(data.forecast.next_90_days_revenue)} para os próximos 90 dias; esse número vira referência simples para campanha, estoque e fluxo de caixa.`;
+          }
+        };
+
+        const renderChart = (forecast) => {
+          const chart = document.getElementById('prediction-forecast-chart');
+          if (!chart) return;
+
+          const history = forecast.history.slice(-12);
+          const future = forecast.forecast;
+          const values = history.map((row) => row.actual).concat(future.map((row) => row.prediction));
+          const labels = history.map((row) => row.month).concat(future.map((row) => row.month));
+          const width = 860;
+          const height = 360;
+          const padding = { top: 34, right: 36, bottom: 62, left: 78 };
+          const forecastLabel = (value) => compactNumber.format(value).replace(/\s/g, ' ');
+          const minValue = Math.min(...future.map((row) => row.lower_bound), ...values);
+          const maxValue = Math.max(...future.map((row) => row.upper_bound), ...values);
+          const range = Math.max(maxValue - minValue, 1);
+          const plotWidth = width - padding.left - padding.right;
+          const plotHeight = height - padding.top - padding.bottom;
+
+          const point = (value, index) => ({
+            x: padding.left + (index / (labels.length - 1)) * plotWidth,
+            y: padding.top + ((maxValue - value) / range) * plotHeight
+          });
+
+          const historyPoints = history.map((row, index) => point(row.actual, index));
+          const futurePoints = future.map((row, index) => point(row.prediction, history.length + index));
+          const lowerPoints = future.map((row, index) => point(row.lower_bound, history.length + index));
+          const upperPoints = future.map((row, index) => point(row.upper_bound, history.length + index));
+          const path = (points) => points.map((entry, index) => `${index === 0 ? 'M' : 'L'} ${entry.x.toFixed(2)} ${entry.y.toFixed(2)}`).join(' ');
+          const bandPath = `${path(upperPoints)} ${lowerPoints.slice().reverse().map((entry) => `L ${entry.x.toFixed(2)} ${entry.y.toFixed(2)}`).join(' ')} Z`;
+
+          chart.innerHTML = `
+            <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Forecast de receita mensal" class="h-full w-full">
+              <rect width="${width}" height="${height}" rx="16" fill="rgba(15,23,42,0.18)"></rect>
+              <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}" stroke="rgba(148,163,184,0.22)"></line>
+              <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}" stroke="rgba(148,163,184,0.22)"></line>
+              <path d="${bandPath}" fill="rgba(99,102,241,0.16)"></path>
+              <path d="${path(historyPoints)}" fill="none" stroke="#10B981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="${path(futurePoints)}" fill="none" stroke="#A78BFA" stroke-width="4" stroke-dasharray="9 8" stroke-linecap="round" stroke-linejoin="round"></path>
+              ${labels.map((label, index) => {
+                if (index % 2 !== 0) return '';
+                const position = point(values[index], index);
+                return `<text x="${position.x.toFixed(2)}" y="${height - 25}" text-anchor="middle" fill="#94A3B8" font-size="11">${escapeHtml(label)}</text>`;
+              }).join('')}
+              ${futurePoints.map((entry, index) => `
+                <g>
+                  <circle cx="${entry.x.toFixed(2)}" cy="${entry.y.toFixed(2)}" r="5" fill="#A78BFA" stroke="#F1F5F9" stroke-width="1.5"></circle>
+                  <rect x="${(entry.x - 22).toFixed(2)}" y="${(entry.y - (index % 2 === 0 ? 36 : 23)).toFixed(2)}" width="44" height="18" rx="6" fill="rgba(15,23,42,0.82)" stroke="rgba(167,139,250,0.28)"></rect>
+                  <text x="${entry.x.toFixed(2)}" y="${(entry.y - (index % 2 === 0 ? 23 : 10)).toFixed(2)}" text-anchor="middle" fill="#F1F5F9" font-size="10" font-weight="700">${forecastLabel(future[index].prediction)}</text>
+                </g>
+              `).join('')}
+              <text x="${padding.left}" y="24" fill="#F1F5F9" font-size="13" font-weight="700">Histórico e previsão</text>
+              <text x="${width - padding.right}" y="24" text-anchor="end" fill="#94A3B8" font-size="12">Verde: real | Roxo: previsto</text>
+            </svg>
+          `;
+        };
+
+        const renderTable = (selector, rows, cells) => {
+          const tbody = document.querySelector(selector);
+          if (!tbody) return;
+
+          tbody.innerHTML = rows.map((row) => `
+            <tr class="dashboard-row">
+              ${cells.map((cell, index) => `<td class="${index === 0 ? 'dashboard-td' : 'dashboard-td-center'}">${cell(row)}</td>`).join('')}
+            </tr>
+          `).join('');
+        };
+
+        const renderTables = (data) => {
+          renderTable('[data-propensity-table]', data.customer_propensity.city_opportunities.slice(0, 5), [
+            (row) => `<span class="font-semibold">${escapeHtml(row.city)} - ${escapeHtml(row.state)}</span><br><span class="text-xs text-muted">${integer.format(row.customer_count)} clientes no grupo</span>`,
+            (row) => `${Number(row.average_propensity_score).toFixed(1)}`,
+            (row) => currency.format(row.expected_90_day_value)
+          ]);
+
+          renderTable('[data-churn-table]', data.customer_propensity.retention_watchlist.slice(0, 5), [
+            (row) => `<span class="font-semibold">${escapeHtml(row.name)}</span><br><span class="text-xs text-muted">${currency.format(row.total_revenue)}</span>`,
+            (row) => `${Number(row.churn_risk_score).toFixed(1)}`,
+            (row) => `${integer.format(row.days_since_last_purchase)} dias`
+          ]);
+
+          renderTable('[data-cart-table]', data.cart_recovery.product_type_focus.slice(0, 5), [
+            (row) => `<span class="font-semibold">${escapeHtml(categoryLabel(row.category))}</span><br><span class="text-xs text-muted">${escapeHtml(row.top_product)}</span>`,
+            (row) => integer.format(row.estimated_open_units),
+            (row) => currency.format(row.estimated_open_value)
+          ]);
+
+          const notes = document.querySelector('[data-decision-notes]');
+          if (notes) {
+            notes.innerHTML = data.decision_notes.map((note) => `<li>${escapeHtml(note)}</li>`).join('');
+          }
+        };
+
+        fetch(container.dataset.predictionsUrl)
+          .then((response) => {
+            if (!response.ok) throw new Error(`Falha ao carregar previsões: ${response.status}`);
+            return response.json();
+          })
+          .then((data) => {
+            renderModelCards(data.model_cards);
+            renderForecastMetrics(data);
+            renderChart(data.forecast.revenue);
+            renderTables(data);
+            setStatus('API conectada');
+          })
+          .catch((error) => {
+            console.error('Erro ao carregar previsões:', error);
+            setStatus('API indisponível');
+          })
+          .finally(() => {
+            container.dataset.loading = 'false';
+          });
+      };
+
+      if (!window.__predictionDashboardListenersAttached) {
+        document.addEventListener('turbo:load', window.initPredictionsDashboard);
+        document.addEventListener('DOMContentLoaded', window.initPredictionsDashboard);
+        window.__predictionDashboardListenersAttached = true;
+      }
+    </script>
+  </div>
+</div>
